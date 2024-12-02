@@ -1,6 +1,6 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
+This was my first next js app, It was intended mainly to test my skills. There are a lot of unnecessary files and folders at the moment, which will all be removed over time when the project is finally complete.
+# Getting Started
 
 First, run the development server:
 
