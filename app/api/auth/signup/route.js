@@ -15,12 +15,51 @@ export async function POST(req) {
     return NextResponse.json({ error: 'User already exists' }, { status: 409 });
   }
 
-  // Hash password and add new user
+  // Hash password
   const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser = { username,email, password: hashedPassword };
+
+  // Create new user with additional attributes
+  const newUser = {
+    username,
+    email,
+    avatarUrl:"/default-avatar.svg",
+    bannerUrl:null,
+    password: hashedPassword,
+    reviews: [],
+    customerDetails: {
+      id: 'cus_NffrFeUfNV2Hib',
+      object: 'customer',
+      address: null,
+      balance: 0,
+      created: Math.floor(Date.now() / 1000), // Current timestamp in seconds
+      currency: null,
+      default_source: null,
+      delinquent: false,
+      description: null,
+      discount: null,
+      invoice_prefix: '0759376C',
+      invoice_settings: {
+        custom_fields: null,
+        default_payment_method: null,
+        footer: null,
+        rendering_options: null,
+      },
+      livemode: false,
+      metadata: {},
+      name: username, // Use username as default name
+      next_invoice_sequence: 1,
+      phone: null,
+      preferred_locales: [],
+      shipping: null,
+    },
+  };
+
+  // Insert new user into database
   const result = await usersCollection.insertOne(newUser);
 
-  return NextResponse.json({ message: 'User registered successfully', userId: result.insertedId });
+  return NextResponse.json({
+    message: 'User registered successfully',
+    userId: result.insertedId,
+    customerDetails: newUser.customerDetails,
+  });
 }
-
-

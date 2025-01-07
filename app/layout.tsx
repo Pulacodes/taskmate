@@ -3,10 +3,9 @@
 
 import './globals.css';
 import { SessionProvider } from 'next-auth/react';
-import Navbar from '../components/Navbar'; // Import the Navbar component
 import Footer from '@/components/ui/footer';
-import Header from '@/components/header/Haeder';
-
+import Header from '@/components/header';
+import { Providers } from './providers';
 
 export default function RootLayout({
   children,
@@ -21,9 +20,12 @@ export default function RootLayout({
           <div>
             {/* Navbar Component */}
             <Header />
+           
             {/* Main Content */}
             <main className="p-0">
-              {children}
+            <Providers>
+          {children}
+          </Providers>
               
             </main>
             <Footer/>

@@ -4,7 +4,7 @@ import TaskList from '@/components/viewtask/tasks'
 const OpenTasks = () => {
   return (
 
-    <section className="overflow-hidden bg-gray-700 py-16 md:py-20 lg:py-28"><TaskList/></section>
+    <section className="overflow-hidden bg-[url('/taskback.jpg')] py-16 md:py-20 lg:py-28"><TaskList/></section>
    
   )
 }

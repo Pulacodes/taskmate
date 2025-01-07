@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+enum Role {
+  AGENCY_OWNER
+  AGENCY_ADMIN
+  SUBACCOUNT_USER
+  SUBACCOUNT_GUEST
+}
+
+type TasksOffers {
+  amount    Int
+  createdAt DateTime @db.Date
+  message   String
+  userId    String
+}
+
+type UsersCustomerDetails {
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  address               Json?
+  balance               Int
+  created               Int
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  currency              Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  default_source        Json?
+  delinquent            Boolean
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  description           Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  discount              Json?
+  id                    String
+  invoice_prefix        String
+  invoice_settings      UsersCustomerDetailsInvoiceSettings
+  livemode              Boolean
+  /// Nested objects had no data in the sample dataset to introspect a nested type.
+  metadata              Json
+  name                  String
+  next_invoice_sequence Int
+  object                String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  phone                 Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  preferred_locales     Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  shipping              Json?
+  tax_exempt            String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  test_clock            Json?
+}
+
+type UsersCustomerDetailsInvoiceSettings {
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  custom_fields          Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  default_payment_method Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  footer                 Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  rendering_options      Json?
+}
+
+model tasks {
+  id         String        @id @default(auto()) @map("_id") @db.ObjectId
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  assignedTo Json?
+  category   String
+  content    String
+  createdAt  DateTime      @db.Date
+  createdBy  String
+  offers     TasksOffers[]
+  price      Int
+  status     String
+  title      String
+}
+
+model users {
+  id              String               @id @default(auto()) @map("_id") @db.ObjectId
+  customerDetails UsersCustomerDetails
+  email           String
+  password        String
+  username        String
+}

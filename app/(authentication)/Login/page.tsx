@@ -11,6 +11,7 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(''); // For error messages
   const router = useRouter(); // For navigation
+  
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +29,7 @@ const Login: React.FC = () => {
       }
 
       // Login successful, redirect to home page
-      router.push('/viewtask');
+      router.push('/');
     } catch (err) {
       console.error('Login error:', err);
       setError('An error occurred. Please try again.');
@@ -140,10 +141,19 @@ const Login: React.FC = () => {
             </div>
           </div>
           <div className="mb-6">
-            <button type='submit' className="shadow-submit dark:shadow-submit-dark flex w-full items-center justify-center rounded-sm bg-primary px-9 py-4 text-base font-medium text-white duration-300 hover:bg-primary/90">
-              Sign in
-            </button>
+          
+          <button className="shadow-submit dark:shadow-submit-dark flex w-full items-center justify-center rounded-sm bg-primary px-9 py-4 text-base font-medium text-white duration-300 hover:bg-primary/90"
+          type='submit'
+            
+          >
+            Login
+          </button>
+        
+            
           </div>
+
+          
+          
         </form>
         <p className="text-center text-base font-medium text-body-color">
           Don’t you have an account?{" "}

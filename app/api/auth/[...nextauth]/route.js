@@ -23,14 +23,30 @@ export const authOptions = {
         const isValidPassword = await bcrypt.compare(password, user.password);
         if (!isValidPassword) throw new Error("Invalid credentials");
 
-        return { id: user._id, email: user.email };
+        return { id: user._id.toString(), email: user.email }; // Ensure `id` is returned as a string
       },
     }),
   ],
   session: {
-    strategy: "jwt",
+    strategy: "jwt", // Use JWT for session management
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  callbacks: {
+    async jwt({ token, user }) {
+      // Add the user ID to the token on the first sign-in
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      // Attach the user ID to the session object
+      if (token.id) {
+        session.user = { ...session.user, id: token.id };
+      }
+      return session;
+    },
+  },
+  secret: process.env.NEXTAUTH_SECRET, // Ensure this matches your environment
 };
 
 const handler = NextAuth(authOptions);

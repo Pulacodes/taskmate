@@ -1,10 +1,20 @@
 'use client';
 
 import { useState } from 'react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { datePicker } from '@nextui-org/theme';
 
 interface Task {
   title: string;
   content: string;
+  category: string;
+  Duedate: string;
   price: number;
   status: string;
 }
@@ -13,9 +23,11 @@ const AddTask: React.FC = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [price, setPrice] = useState('');
+  const [Duedate, setDuedate] = useState('');
+  const [category, setCategory] = useState('');
 
   const addTask = async () => {
-    if (!title || !content || !price) {
+    if (!title || !content || !price || !category) {
       alert('Please fill in all fields');
       return;
     }
@@ -23,8 +35,10 @@ const AddTask: React.FC = () => {
     const task: Task = { 
       title, 
       content, 
+      category,
+      Duedate,
       price: parseFloat(price), 
-      status: 'Pending' // Set default status
+      status: 'available' // Set default status
     };
 
     const response = await fetch('/api/tasks', {
@@ -40,13 +54,17 @@ const AddTask: React.FC = () => {
       setTitle('');
       setContent('');
       setPrice('');
+      setDuedate('');
+      setCategory('');
     } else {
       alert('Failed to add task');
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[url('/banner.jpg')] bg-cover bg-center py-20">
+    
+    <div className="min-h-screen flex items-center justify-center bg-[url('/banner.jpg')] bg-cover bg-center py-30">
+      
       <div className="bg-white shadow-md rounded-lg p-6 max-w-lg w-full">
         <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">Add New Task</h2>
         
@@ -58,8 +76,25 @@ const AddTask: React.FC = () => {
             onChange={(e) => setTitle(e.target.value)}
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          <div className='space-y-4'>
+            <Select value={category} onValueChange={(value) => setCategory(value)}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Academic Support">Academic Support</SelectItem>
+                <SelectItem value="Technology">Technology</SelectItem>
+                <SelectItem value="Creative Work">Creative Work</SelectItem>
+                <SelectItem value="Daily Assistance">Daily Assistance</SelectItem>
+                <SelectItem value="Career and Professional Services">Career and Professional Services</SelectItem>
+                <SelectItem value="Fitness and Wellness">Fitness and Wellness</SelectItem>
+                <SelectItem value="Miscellaneous">Miscellaneous</SelectItem>
+                <SelectItem value="Hobbies and Interests">Hobbies and Interests</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <textarea
-            placeholder="Content"
+            placeholder="Please describe the details of the task, list specific points you need fulfilled to avoid confusion"
             value={content}
             onChange={(e) => setContent(e.target.value)}
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -72,9 +107,17 @@ const AddTask: React.FC = () => {
             onChange={(e) => setPrice(e.target.value)}
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+           <label htmlFor="duedate" className="block text-gray-700 font-medium">Due date:(optionatl)</label>
+          <input
+            type="date"
+            id='duedate'
+            value={Duedate}
+            onChange={(e) => setDuedate(e.target.value)}
+            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
 
           {/* Display default status */}
-          <div className="text-gray-600">Status: <span className="font-semibold text-blue-500">Pending</span></div>
+          <div className="text-gray-600">Status: <span className="font-semibold text-blue-500">Available</span></div>
 
           <button
             onClick={addTask}
