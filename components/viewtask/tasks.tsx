@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 
 interface Task {
   _id: string;
@@ -25,7 +24,6 @@ const TaskList: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   const router = useRouter();
-  const { data: session } = useSession();
 
   // Fetch user data by user ID
   const fetchUserData = async (userid: string) => {

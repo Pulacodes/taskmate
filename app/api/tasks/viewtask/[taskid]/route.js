@@ -5,6 +5,7 @@ import { ObjectId } from 'mongodb';
 export async function GET(req, { params }) {
   const { taskid } = params;
 
+  // Validate the task ID as a string
   if (!ObjectId.isValid(taskid)) {
     return NextResponse.json({ message: 'Invalid task ID format' }, { status: 400 });
   }
@@ -14,7 +15,7 @@ export async function GET(req, { params }) {
   const collection = db.collection('tasks');
 
   try {
-    const task = await collection.findOne({ _id: new ObjectId(taskid) });
+    const task = await collection.findOne({ _id: new ObjectId(taskid) }); // Pass string to ObjectId
 
     if (!task) {
       return NextResponse.json({ message: 'Task not found' }, { status: 404 });
@@ -30,6 +31,7 @@ export async function GET(req, { params }) {
 export async function POST(req, { params }) {
   const { taskid } = params;
 
+  // Validate the task ID as a string
   if (!ObjectId.isValid(taskid)) {
     return NextResponse.json({ message: 'Invalid task ID format' }, { status: 400 });
   }
@@ -41,13 +43,13 @@ export async function POST(req, { params }) {
   try {
     const offerData = await req.json();
 
-    // Validate the offer data (adjust fields as needed)
+    // Validate the offer data
     if (!offerData || !offerData.userId || !offerData.amount || typeof offerData.amount !== 'number') {
       return NextResponse.json({ message: 'Invalid offer data' }, { status: 400 });
     }
 
     const result = await collection.updateOne(
-      { _id: new ObjectId(taskid) },
+      { _id: new ObjectId(taskid) }, // Pass string to ObjectId
       {
         $push: {
           offers: {

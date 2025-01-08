@@ -18,13 +18,7 @@ const Footer = () => {
                     width={140}
                     height={30}
                   />
-                  <Image
-                    src="/images/logo/task-mate.svg"
-                    alt="logo"
-                    className="hidden w-full dark:block"
-                    width={140}
-                    height={30}
-                  />
+                  
                 </Link>
                 <p className="mb-9 text-gray-400 leading-relaxed text-body-color dark:text-body-color-dark">
                   Connect with fellow students, complete tasks for money or get your tasks done

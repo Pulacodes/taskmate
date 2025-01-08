@@ -2,7 +2,6 @@
 import Image from "next/image";
 import React from "react";
 import Hero from "@/components/Hero";
-import Features from "@/components/Features/features";
 export default function Home() {
   return (
     <div className="overflow-hidden min-h-screen bg-white">
@@ -73,7 +72,7 @@ export default function Home() {
           
         </div>
       </section>
-      <Features/>
+      
      
     </div>
   );
