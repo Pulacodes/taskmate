@@ -1,16 +1,10 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import GithubProvider from "next-auth/providers/github"
 import clientPromise from "../../../../lib/mongodb";
 import bcrypt from "bcryptjs";
 
-// NextAuth options
-const authOptions = {
+export const authOptions = {
   providers: [
-    GithubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
-    }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -29,7 +23,7 @@ const authOptions = {
         const isValidPassword = await bcrypt.compare(password, user.password);
         if (!isValidPassword) throw new Error("Invalid credentials");
 
-        return { id: user._id.toString(), email: user.email }; // Ensure `id` is returned as a string
+        return { id: user._id.toString(), email: user.email }; // Ensure id is returned as a string
       },
     }),
   ],
@@ -55,8 +49,5 @@ const authOptions = {
   secret: process.env.NEXTAUTH_SECRET, // Ensure this matches your environment
 };
 
-// Pass authOptions to NextAuth
 const handler = NextAuth(authOptions);
-
-// Export the route handlers
 export { handler as GET, handler as POST };
