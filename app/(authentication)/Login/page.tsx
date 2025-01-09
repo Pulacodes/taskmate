@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { signIn } from 'next-auth/react'; // Import NextAuth's signIn function
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Metadata } from 'next';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -35,7 +34,9 @@ const Login: React.FC = () => {
       setError('An error occurred. Please try again.');
     }
   };
-
+  if(email==password){
+    error;
+  }
   return (
     
       <section className="relative z-10 overflow-hidden bg-gray-800 pb-16 pt-36 md:pb-20 lg:pb-28 lg:pt-[180px]">

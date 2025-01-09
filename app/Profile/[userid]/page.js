@@ -13,7 +13,6 @@ export default function ProfilePage() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null); // Added to handle errors
-  const { data: session } = useSession();
 
   useEffect(() => {
     if (!userid) return;

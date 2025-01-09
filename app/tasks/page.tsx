@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { datePicker } from '@nextui-org/theme';
 
 interface Task {
   title: string;

@@ -98,7 +98,7 @@ export default function TaskDetailsPage() {
       setEditingOffer(false);
       setExistingOffer(payload);
     } catch (err) {
-      alert('Error: ${err.message}');
+      alert(`Error: ${err.message}`);
     }
   };
 
