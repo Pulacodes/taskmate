@@ -58,7 +58,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[url('/emu.jpg')] bg-cover bg-center py-20">
+    <div className="min-h-screen flex items-center justify-center bg-[url('/emu.jpg')] bg-cover bg-center py-35">
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
         <h2 className="text-3xl font-semibold text-center text-gray-700 mb-6">Create an Account</h2>
         <p className="text-center text-gray-500 mb-8">Join us and start completing or posting tasks</p>
