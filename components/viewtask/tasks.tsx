@@ -61,12 +61,10 @@ const TaskList: React.FC = () => {
     setCategories(uniqueCategories);
   };
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
 
   // Handle filtering tasks by category
   useEffect(() => {
+    fetchTasks();
     if (selectedCategory === 'all') {
       setFilteredTasks(tasks);
     } else {

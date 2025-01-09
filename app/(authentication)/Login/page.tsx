@@ -23,7 +23,7 @@ const Login: React.FC = () => {
       });
 
       if (result?.error) {
-        setError(result.error); // Set error message if login fails
+        setError(error); // Set error message if login fails
         return;
       }
 
@@ -31,7 +31,6 @@ const Login: React.FC = () => {
       router.push('/');
     } catch (err) {
       console.error('Login error:', err);
-      error;
       setError('An error occurred. Please try again.');
     }
   };

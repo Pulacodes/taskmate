@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getSession } from 'next-auth/react'; // Import for session handling
 import { useSession } from 'next-auth/react';
-
+import Image from 'next/image';
 interface Task {
   _id: string;
   title: string;
@@ -83,7 +83,7 @@ const TaskList: React.FC = () => {
             >
               {/* User info */}
               <div className="flex items-center p-4 border-b border-gray-200">
-                <img
+                <Image
                   src={'/avatar.svg'}
                   alt={`${session?.user?.email}'s avatar`}
                   className="w-10 h-10 rounded-full mr-3"
@@ -103,7 +103,7 @@ const TaskList: React.FC = () => {
 
               {/* Status dot */}
               <div className="absolute bottom-4 right-4">
-                <img src={getStatusDot(task.status)} alt={task.status} className="w-4 h-4" />
+                <Image src={getStatusDot(task.status)} alt={task.status} className="w-4 h-4" />
               </div>
             </div>
           ))}
