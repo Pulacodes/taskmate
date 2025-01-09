@@ -38,7 +38,7 @@ const TaskList: React.FC = () => {
       const userTasks = data.filter((task) => task.assignedTo === userId);
       setTasks(userTasks);
     } catch (err) {
-      setError("Failed to fetch tasks. Please try again.");
+      setError(err+"Failed to fetch tasks. Please try again.");
     } finally {
       setLoading(false);
     }

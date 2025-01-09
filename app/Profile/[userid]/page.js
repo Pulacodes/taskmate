@@ -5,7 +5,6 @@ import Breadcrumb from '@/components/common/Breadcrumb';
 import Image from 'next/image';
 import ReviewsCarousel from '@/components/Review/page';
 import { useParams } from 'next/navigation';
-import { useSession } from "next-auth/react";
 
 export default function ProfilePage() {
   const params = useParams();

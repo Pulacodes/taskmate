@@ -31,12 +31,11 @@ const Login: React.FC = () => {
       router.push('/');
     } catch (err) {
       console.error('Login error:', err);
+      error;
       setError('An error occurred. Please try again.');
     }
   };
-  if(email==password){
-    error;
-  }
+  
   return (
     
       <section className="relative z-10 overflow-hidden bg-gray-800 pb-16 pt-36 md:pb-20 lg:pb-28 lg:pt-[180px]">

@@ -17,6 +17,6 @@ export async function GET() {
 
     return new Response(JSON.stringify(tasks), { status: 200 });
   } catch (error) {
-    return new Response(JSON.stringify({ error: "Failed to fetch tasks" }), { status: 500 });
+    return new Response(JSON.stringify({ error: error }), { status: 500 });
   }
 }
