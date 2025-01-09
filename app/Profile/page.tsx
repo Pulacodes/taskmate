@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 const Profile = () => {
 const { data: session } = useSession();
 const [userData, setUserData] = useState(null);
-const userid = session?.user?.id;
+const userid = session?.user?.name;
   useEffect(() => {
     if (!userid) return;
 
@@ -31,8 +31,8 @@ const userid = session?.user?.id;
 
     fetchData();
   }, [userid]);
-  const avatarUrl = userData?.avatarUrl || '/default-avatar.svg';
-  const username = userData?.username || 'Unknown User';
+  const avatarUrl = '/default-avatar.svg';
+  const username =  'Unknown User';
   return (
     <DefaultLayout>
       <div className="mx-auto max-w-242.5">
