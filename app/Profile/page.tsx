@@ -31,8 +31,8 @@ const userid = session?.user?.name;
 
     fetchData();
   }, [userid]);
-  const avatarUrl = '/default-avatar.svg';
-  const username =  'Unknown User';
+  const avatarUrl = userData || '/default-avatar.svg';
+  const username = userData || 'Unknown User';
   return (
     <DefaultLayout>
       <div className="mx-auto max-w-242.5">
