@@ -3,7 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import clientPromise from "../../../../lib/mongodb";
 import bcrypt from "bcryptjs";
 
-export const authOptions = {
+// NextAuth options
+const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -49,5 +50,8 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET, // Ensure this matches your environment
 };
 
+// Pass authOptions to NextAuth
 const handler = NextAuth(authOptions);
+
+// Export the route handlers
 export { handler as GET, handler as POST };
