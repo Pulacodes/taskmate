@@ -42,6 +42,7 @@ export async function POST(req) {
       price: parseFloat(price),
       status: status || 'Available',
       duedate,
+      AssignedTo:null,
       createdAt: new Date(),
       user: {
         username: user.username || `${user.first_name} ${user.last_name}`,

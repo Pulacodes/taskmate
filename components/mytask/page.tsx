@@ -118,7 +118,7 @@ const TaskList: React.FC = () => {
 
       {/* Task Cards */}
       {filteredTasks.length === 0 ? (
-        <p className="text-gray-600">No tasks available for the selected category.</p>
+        <p className="text-gray-600">No tasks have been assigned to you yet.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {filteredTasks.map((task) => (

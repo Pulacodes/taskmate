@@ -19,12 +19,10 @@ export async function GET() {
       
           const user = await userResponse.json();
 
-  try {
+ 
     const db = await connectToDatabase();
-    const tasks = await db.collection("tasks").find({ acceptedBy: user.email_addresses?.[0]?.email_address }).toArray();
+    const tasks = await db.collection("tasks").find({ AssignedTo: user.email_addresses?.[0]?.email_address }).toArray();
 
     return new Response(JSON.stringify(tasks), { status: 200 });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error }), { status: 500 });
-  }
+  
 }
