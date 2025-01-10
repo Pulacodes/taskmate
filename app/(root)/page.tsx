@@ -4,13 +4,12 @@ import React from "react";
 import { useEffect, useState } from "react";
 import Hero from "@/components/Hero";
 export default function Home() {
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+
 
   useEffect(() => {
     // Function to call the API
     const registerUser = async () => {
-      try {
+      
         const response = await fetch('/api/auth', {
           method: 'POST',
           headers: {
@@ -19,16 +18,9 @@ export default function Home() {
         });
 
         if (!response.ok) {
-          const errorData = await response.json();
-          setError(errorData.error || 'An error occurred');
           return;
         }
-
-        const data = await response.json();
-        setMessage(data.message || 'User registered successfully');
-      } catch (err) {
-        setError('Failed to connect to the server');
-      }
+        const data = await response.json();  
     };
 
     registerUser();
