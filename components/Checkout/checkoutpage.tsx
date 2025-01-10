@@ -1,5 +1,5 @@
 "use client";
-
+import { Suspense } from 'react';
 import React, { useEffect, useState } from "react";
 import {
   useStripe,
@@ -79,6 +79,7 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
   }
 
   return (
+    <Suspense fallback={<div>Loading...</div>}> 
     <form onSubmit={handleSubmit} className="bg-white p-2 rounded-md">
       {clientSecret && <PaymentElement />}
 
@@ -91,6 +92,8 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
         {!loading ? `Pay TL${amount}` : "Processing..."}
       </button>
     </form>
+     </Suspense>
+    
   );
 };
 

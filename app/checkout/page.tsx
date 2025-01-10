@@ -48,7 +48,7 @@ export default function Checkout() {
             currency: "try", // Turkish Lira
           }}
         >
-          <Suspense fallback={<div>Loading...</div>}> <CheckoutPage amount={amount} /> </Suspense>
+          <Suspense fallback={<div>Loading...</div>}> <CheckoutPage amount={amount}/> </Suspense>
         </Elements>
       </main>
     </section>
