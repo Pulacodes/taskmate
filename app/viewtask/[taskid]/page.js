@@ -45,16 +45,7 @@ export default function TaskDetailsPage() {
         setError(err.message);
       }
     };
-    const fetchData = async () => {
-      
-        const userRes = await fetch(`/api/users/${task?.createdBy}`);
-        
-        const userData = await userRes.json();
-        setUserData(userData);
-      
-    };
-
-    fetchData();
+   
     fetchTask();
      
     
@@ -125,7 +116,7 @@ export default function TaskDetailsPage() {
     window.location.href = `/checkout?price=${taskPrice}&user=${encodeURIComponent(assignedUser)}`;
   };
   
-  const isTaskOwner = user?.emailAddresses[0]?.emailAddress === task?.createdBy;
+  const isTaskOwner = user?.emailAddresses[0]?.emailAddress === task?.user.email;
   
 
   const avatarUrl = userData?.avatarUrl || '/default-avatar.svg';
@@ -149,9 +140,9 @@ export default function TaskDetailsPage() {
         <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
           <div className="px-4 pb-6 text-center lg:pb-8">
                   <div className="relative  mx-auto w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-30 sm:max-w-30 sm:p-3">
-                  <Link href={`/Profile/${task.createdBy}`}>
+                  <Link href={`/Profile/${task.user.email}`}>
                   <Image
-                      src={avatarUrl || '/default-avatar.svg'} // Use user avatar or a default one
+                      src={task.user.avatar || '/default-avatar.svg'} // Use user avatar or a default one
                       width={100}
                       height={100}
                       alt={`${username}'s profile avatar`}
@@ -162,7 +153,7 @@ export default function TaskDetailsPage() {
                 </div>
           
                 <h3 className="text-center mb-1.5 text-2xl font-semibold text-black dark:text-white">
-                  {username}
+                  {task.user.username}
                 </h3>
                   
                     
