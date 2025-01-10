@@ -4,21 +4,21 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { useUser } from "@clerk/nextjs";
 
 
 const Profile = () => {
-const { data: session } = useSession();
+  const { user } = useUser();
 const [userData, setUserData] = useState(null);
-const userid = session?.user?.name;
+const email = user?.emailAddresses[0]?.emailAddress;
   useEffect(() => {
-    if (!userid) return;
+    if (!email) return;
 
     // Fetch user data and related information
     const fetchData = async () => {
       
         // Fetch user data
-        const userRes = await fetch(`/api/users/${userid}`);
+        const userRes = await fetch(`/api/users/${email}`);
         if (!userRes.ok) {
           throw new Error('Failed to fetch user data');
         }
@@ -30,7 +30,7 @@ const userid = session?.user?.name;
     };
 
     fetchData();
-  }, [userid]);
+  }, [email]);
   const avatarUrl = userData || '/default-avatar.svg';
   const username = userData || 'Unknown User';
   return (

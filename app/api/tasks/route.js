@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '../../../lib/mongodb';
-import { getToken } from 'next-auth/jwt';
+import { getAuth } from "@clerk/nextjs/server";
 
 export async function POST(req) {
   const client = await clientPromise;
@@ -8,16 +8,25 @@ export async function POST(req) {
   const collection = db.collection('tasks');
 
   try {
-    // Extract token from cookies
-    console.log("Incoming Request Headers:", req.headers.get("cookie")); // Log cookies
-  
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  console.log("Decoded Token:", token); // Log decoded token
-  
-  if (!token || !token.id) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    // Get the logged-in user's ID
+    const { userId } = getAuth(req);
+
+    if (!userId) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
-    const userId = token.email;
+
+    // Fetch user details from Clerk
+    const userResponse = await fetch(`https://api.clerk.dev/v1/users/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`, // Use Clerk Secret Key
+      },
+    });
+
+    if (!userResponse.ok) {
+      return NextResponse.json({ message: "Failed to fetch user details." }, { status: 500 });
+    }
+
+    const user = await userResponse.json();
 
     // Parse request body
     const { title, content, price, status, category, duedate } = await req.json();
@@ -26,30 +35,33 @@ export async function POST(req) {
     }
 
     // Prepare new task object
-    const newTask = { 
-      title, 
-      content, 
+    const newTask = {
+      title,
+      content,
       category,
-      price: parseFloat(price), 
-      status: status || 'Available', 
-      createdBy: userId, 
-      assignedTo: null,  
+      price: parseFloat(price),
+      status: status || 'Available',
       duedate,
       createdAt: new Date(),
+      user: {
+        username: user.username || `${user.first_name} ${user.last_name}`,
+        email: user.email_addresses?.[0]?.email_address,
+        avatar: user.profile_image_url,
+      },
     };
 
     // Insert task into database
-const result = await collection.insertOne(newTask);
-if (!result.acknowledged) {
-  throw new Error("Failed to insert task");
-}
+    const result = await collection.insertOne(newTask);
+    if (!result.acknowledged) {
+      throw new Error("Failed to insert task");
+    }
 
-// Return the newly created task (if needed, you can fetch it back)
-const insertedTask = {
-  ...newTask,
-  _id: result.insertedId, // Add the inserted document's ID to the response
-};
-return NextResponse.json(insertedTask, { status: 201 });
+    // Return the newly created task
+    const insertedTask = {
+      ...newTask,
+      _id: result.insertedId,
+    };
+    return NextResponse.json(insertedTask, { status: 201 });
 
   } catch (error) {
     console.error("Error inserting task:", error);

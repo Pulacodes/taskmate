@@ -1,18 +1,16 @@
 import clientPromise from "../../../../lib/mongodb";
-import { ObjectId } from "mongodb";
 
 export async function GET(request, { params }) {
-  const { userid } = params;
+  const { email } = params;
 
   try {
-    // Validate userid
-    if (!ObjectId.isValid(userid)) {
-      return new Response(JSON.stringify({ error: "Invalid user ID" }), { status: 400 });
+    if (!email || typeof email !== "string") {
+      return new Response(JSON.stringify({ error: "Invalid email" }), { status: 400 });
     }
 
     const client = await clientPromise;
     const db = client.db("taskme");
-    const user = await db.collection("users").findOne({ _id: new ObjectId(userid) });
+    const user = await db.collection("users").findOne({ email: new RegExp(`^${email}$`, "i") });
 
     if (!user) {
       return new Response(JSON.stringify({ error: "User not found" }), { status: 404 });

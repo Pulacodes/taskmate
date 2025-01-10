@@ -9,10 +9,9 @@ interface Task {
   price: string;
   status: string;
   createdAt: string;
-  createdBy: string;
   category: string;
   user?: {
-    avatarUrl: string;
+    avatar: string;
     username: string;
   };
 }
@@ -25,46 +24,39 @@ const TaskList: React.FC = () => {
 
   const router = useRouter();
 
-  // Fetch user data by user ID
-  const fetchUserData = async (userid: string) => {
-    const userRes = await fetch(`/api/users/${userid}`);
-    if (!userRes.ok) {
-      console.error(`Failed to fetch user data for user ID: ${userid}`);
-      return null;
-    }
-    return await userRes.json();
-  };
-
-  // Fetch tasks and include user data
+  // Fetch tasks and handle user data directly from API
   const fetchTasks = async () => {
-    const response = await fetch('/api/tasks/viewtask');
-    const data: Task[] = await response.json();
+    try {
+      const response = await fetch('/api/tasks/viewtask', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
 
-    const availableTasks = data.filter((task) => task.status === 'available');
+      if (!response.ok) {
+        throw new Error('Failed to fetch tasks.');
+      }
 
-    // Fetch user data for each task
-    const tasksWithUserData = await Promise.all(
-      availableTasks.map(async (task) => {
-        const userData = await fetchUserData(task.createdBy);
-        return {
-          ...task,
-          user: userData,
-        };
-      })
-    );
+      const data: Task[] = await response.json();
 
-    setTasks(tasksWithUserData);
+      // Filter available tasks
+      const availableTasks = data.filter((task) => task.status === 'available');
+      setTasks(availableTasks);
 
-    const uniqueCategories = Array.from(
-      new Set(tasksWithUserData.map((task) => task.category))
-    );
-    setCategories(uniqueCategories);
+      // Extract unique categories
+      const uniqueCategories = Array.from(
+        new Set(availableTasks.map((task) => task.category))
+      );
+      setCategories(uniqueCategories);
+
+      // Set filtered tasks initially to all available tasks
+      setFilteredTasks(availableTasks);
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+    }
   };
-
 
   // Handle filtering tasks by category
   useEffect(() => {
-    fetchTasks();
     if (selectedCategory === 'all') {
       setFilteredTasks(tasks);
     } else {
@@ -73,10 +65,17 @@ const TaskList: React.FC = () => {
     }
   }, [selectedCategory, tasks]);
 
+  // Initial fetch
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  // Handle task card click
   const handleCardClick = (taskId: string) => {
     router.push(`/viewtask/${taskId}`);
   };
 
+  // Map status to color dots
   const getStatusDot = (status: string) => {
     switch (status) {
       case 'available':
@@ -96,12 +95,15 @@ const TaskList: React.FC = () => {
 
       {/* Category Filter Dropdown */}
       <div className="mb-6">
-        <label className="block text-white text-sm font-medium mb-2" htmlFor="category">
+        <label
+          className="block text-white text-sm font-medium mb-2"
+          htmlFor="category"
+        >
           Filter by Category:
         </label>
         <select
           id="category"
-          className="bg-gray-800 text-white border border-gray-600 rounded-md p-2 w-200"
+          className="bg-gray-800 text-white border border-gray-600 rounded-md p-2 w-full"
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
         >
@@ -123,25 +125,23 @@ const TaskList: React.FC = () => {
             <div
               key={task._id}
               onClick={() => handleCardClick(task._id)}
-              className="relative bg-black !bg-opacity-80 shadow-md rounded-md cursor-pointer hover:bg-gray-700 transition-colors"
+              className="relative bg-black bg-opacity-80 shadow-md rounded-md cursor-pointer hover:bg-gray-700 transition-colors"
             >
-              {/* User info */}
-              <div className="flex items-center p-4 border-b border-transparent">
-                {task.user && (
-                  <>
-                    <img
-                      src={task.user.avatarUrl}
-                      alt={`${task.user.username}'s avatar`}
-                      className="w-10 h-10 rounded-full mr-3"
-                    />
-                    <span className="text-sm text-gray-200 font-semibold">
-                      {task.user.username}
-                    </span>
-                  </>
-                )}
-              </div>
+              {/* User Info */}
+              {task.user && (
+                <div className="flex items-center p-4 border-b border-transparent">
+                  <img
+                    src={task.user.avatar}
+                    alt={`${task.user.username}'s avatar`}
+                    className="w-10 h-10 rounded-full mr-3"
+                  />
+                  <span className="text-sm text-gray-200 font-semibold">
+                    {task.user.username}
+                  </span>
+                </div>
+              )}
 
-              {/* Task content */}
+              {/* Task Content */}
               <div className="p-4">
                 <h3 className="text-lg text-indigo-700 font-bold mb-2">{task.title}</h3>
                 <p className="text-gray-400 mb-4">{task.content}</p>
@@ -151,7 +151,7 @@ const TaskList: React.FC = () => {
                 </p>
               </div>
 
-              {/* Status dot */}
+              {/* Status Dot */}
               <div className="absolute bottom-4 right-4">
                 <img src={getStatusDot(task.status)} alt={task.status} className="w-4 h-4" />
               </div>

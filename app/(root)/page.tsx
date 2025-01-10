@@ -1,14 +1,46 @@
 "use client";
 import Image from "next/image";
 import React from "react";
+import { useEffect, useState } from "react";
 import Hero from "@/components/Hero";
 export default function Home() {
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    // Function to call the API
+    const registerUser = async () => {
+      try {
+        const response = await fetch('/api/auth', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          setError(errorData.error || 'An error occurred');
+          return;
+        }
+
+        const data = await response.json();
+        setMessage(data.message || 'User registered successfully');
+      } catch (err) {
+        setError('Failed to connect to the server');
+      }
+    };
+
+    registerUser();
+  }, []);
+
   return (
     <div className="overflow-hidden min-h-screen bg-white">
       {/* Hero Section */}
       <br/>
       <Hero/>
       {/* Featured Available Tasks */}
+      
       
 
       {/* Popular Task Categories */}

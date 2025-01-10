@@ -1,30 +1,44 @@
 import { NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
-import clientPromise from '../../../../lib/mongodb';
+import clientPromise from '../../../lib/mongodb';
+import { getAuth } from "@clerk/nextjs/server";
 
 export async function POST(req) {
-  const { username, email, password } = await req.json();
+  const { userId } = getAuth(req);
+
+  if (!userId) {
+    return NextResponse.json({ error: "No user is signed in." }, { status: 401 });
+  }
 
   const client = await clientPromise;
   const db = client.db('taskme');
   const usersCollection = db.collection('users');
 
   // Check if user already exists
-  const existingUser = await usersCollection.findOne({ email });
+  const existingUser = await usersCollection.findOne({ userId });
   if (existingUser) {
     return NextResponse.json({ error: 'User already exists' }, { status: 409 });
   }
 
-  // Hash password
-  const hashedPassword = await bcrypt.hash(password, 10);
+  // Fetch user details from Clerk using userId
+  const userResponse = await fetch(`https://api.clerk.dev/v1/users/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`, // Use the correct API key
+    },
+  });
 
-  // Create new user with additional attributes
+  if (!userResponse.ok) {
+    return NextResponse.json({ error: "Failed to fetch user details from Clerk." }, { status: 500 });
+  }
+
+  const user = await userResponse.json();
+
+  // Create a new user with data from Clerk
   const newUser = {
-    username,
-    email,
-    avatarUrl:"/default-avatar.svg",
-    bannerUrl:null,
-    password: hashedPassword,
+    userId,
+    email: user.email_addresses?.[0]?.email_address, // Get the primary email address
+    username: user.username || `${user.first_name} ${user.last_name}`, // Use username or fallback to full name
+    avatarUrl: user.profile_image_url, // Get avatar URL
+    bannerUrl: null,
     reviews: [],
     customerDetails: {
       id: 'cus_NffrFeUfNV2Hib',
@@ -46,7 +60,7 @@ export async function POST(req) {
       },
       livemode: false,
       metadata: {},
-      name: username, // Use username as default name
+      name: user.username || `${user.first_name} ${user.last_name}`, // Use username as default name
       next_invoice_sequence: 1,
       phone: null,
       preferred_locales: [],
@@ -54,7 +68,7 @@ export async function POST(req) {
     },
   };
 
-  // Insert new user into database
+  // Insert the new user into the database
   const result = await usersCollection.insertOne(newUser);
 
   return NextResponse.json({

@@ -1,5 +1,8 @@
+
 import { NextResponse } from 'next/server';
 import clientPromise from '../../../../lib/mongodb';
+
+
 
 export async function GET() {
     const client = await clientPromise;
@@ -14,3 +17,4 @@ export async function GET() {
       return NextResponse.json({ message: "Failed to fetch tasks" }, { status: 500 });
     }
   }
+  

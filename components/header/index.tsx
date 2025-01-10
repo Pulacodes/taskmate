@@ -4,13 +4,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useSession,  signOut } from 'next-auth/react';
+import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
 import menuData from './MenuData';
+
 
 
 const Header = () => {
   const [navbarOpen, setNavbarOpen] = useState(false);
-  const { data: session } = useSession();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navbarToggleHandler = () => {
     setNavbarOpen(!navbarOpen);
@@ -155,48 +155,14 @@ const Header = () => {
                 </nav>
               </div>
               <div className="flex items-center justify-end pr-16 lg:pr-0">
-          {session ? (
-            <div className="flex text-gray-600 items-center space-x-4">
-              <button 
-                onClick={() => setDropdownOpen(!dropdownOpen)} 
-                className="hover:text-primary"
-              >
-                
-                {session.user?.email} {/* Display user's name */}
-              </button>
-              {dropdownOpen && (
-                <div className="absolute right-4 mt-2 w-48 bg-gray-700 text-black rounded shadow-lg py-2">
-                  <button 
-                    onClick={() => signOut()} 
-                    className="block text-white px-4 py-2 text-left w-full hover:bg-blue-100"
-                  >
-                    Sign Out
-                  </button>
-                  <Link href="/Profile"
-                    className="block text-white px-4 py-2 text-left w-full hover:bg-blue-100"
-                   >
-                      Profile
-                  </Link>
-                  <button className='text-red' onClick={()=>setDropdownOpen(!dropdownOpen)}>close</button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="flex items-center justify-end pr-16 lg:pr-0">
-              <Link
-                  href="/Login"
-                  className="hidden px-7 py-3 text-blue-400 font-medium text-dark hover:opacity-70 dark:text-white md:block"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/Signup"
-                  className="ease-in-up shadow-btn hover:shadow-btn-hover hidden rounded-sm bg-primary px-8 py-3 text-base font-medium text-white transition duration-300 hover:bg-opacity-90 md:block md:px-9 lg:px-6 xl:px-9"
-                >
-                  Sign Up
-                </Link>
-            </div>
-          )}
+              <SignedIn>
+        {/* Mount the UserButton component */}
+        <UserButton />
+      </SignedIn>
+      <SignedOut>
+        {/* Signed out users get sign in button */}
+        <SignInButton />
+      </SignedOut>
         </div>
             </div>
           </div>

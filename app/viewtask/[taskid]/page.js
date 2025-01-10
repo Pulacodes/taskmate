@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { useUser } from "@clerk/nextjs";
 import Image from 'next/image';
 import Link from 'next/link';
 
 
 export default function TaskDetailsPage() {
-  const { data: session } = useSession();
+  const { user } = useUser();
   const params = useParams();
   const taskid = params?.taskid;
 
@@ -39,7 +39,7 @@ export default function TaskDetailsPage() {
         const data = await res.json();
         setTask(data);
         setOffers(data.offers || []);
-        const userOffer = data.offers?.find((offer) => offer.userId === session?.user?.email);
+        const userOffer = data.offers?.find((offer) => offer.userId === user?.emailAddresses[0]?.emailAddress);
         if (userOffer) setExistingOffer(userOffer);
       } catch (err) {
         setError(err.message);
@@ -58,7 +58,7 @@ export default function TaskDetailsPage() {
     fetchTask();
      
     
-  }, [taskid, session,task?.createdBy]);
+  }, [taskid, user,task?.createdBy]);
   
   const handleSubmitOffer = async () => {
     if (offerText.trim() === '') {
@@ -67,7 +67,7 @@ export default function TaskDetailsPage() {
     }
 
     const payload = {
-      userId: session?.user?.email,
+      userId: user?.emailAddresses[0]?.emailAddress,
       amount: parseFloat(prompt('Enter your offer amount:', existingOffer?.amount || '0')), // Prompt for amount
       message: offerText,
     };
@@ -89,7 +89,7 @@ export default function TaskDetailsPage() {
       }
 
       const updatedOffers = editingOffer
-        ? offers.map((offer) => (offer.userId === session?.user?.email ? { ...offer, ...payload } : offer))
+        ? offers.map((offer) => (offer.userId === user?.emailAddresses[0]?.emailAddress ? { ...offer, ...payload } : offer))
         : [...offers, payload];
 
       setOffers(updatedOffers);
@@ -125,7 +125,7 @@ export default function TaskDetailsPage() {
     window.location.href = `/checkout?price=${taskPrice}&user=${encodeURIComponent(assignedUser)}`;
   };
   
-  const isTaskOwner = session?.user?.id === task?.createdBy;
+  const isTaskOwner = user?.emailAddresses[0]?.emailAddress === task?.createdBy;
   
 
   const avatarUrl = userData?.avatarUrl || '/default-avatar.svg';

@@ -6,15 +6,15 @@ export async function GET(request, { params }) {
 
   try {
     // Validate userid
-    if (!ObjectId.isValid(userid)) {
-      return new Response(JSON.stringify({ error: "Invalid user ID" }), { status: 400 });
+    if (!userid || typeof userid !== "string") {
+      return new Response(JSON.stringify({ error: "Invalid email" }), { status: 400 });
     }
 
     const client = await clientPromise;
     const db = client.db("taskme");
     // Fetch only the `reviews` field
     const user = await db.collection("users").findOne(
-      { _id: new ObjectId(userid) },
+      { email: new RegExp(`^${userid}$`, "i") },
       { projection: { reviews: 1 } } // Include only the `reviews` field
     );
 

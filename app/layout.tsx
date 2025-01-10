@@ -2,7 +2,7 @@
 'use client';  // Ensure this is a client component
 
 import './globals.css';
-import { SessionProvider } from 'next-auth/react';
+import { ClerkProvider } from '@clerk/nextjs'
 import Footer from '@/components/ui/footer';
 import Header from '@/components/header';
 import { Providers } from './providers';
@@ -16,7 +16,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         {/* Only the client-side part needs SessionProvider */}
-        <SessionProvider>
+        <ClerkProvider>
           <div>
             {/* Navbar Component */}
             <Header />
@@ -30,7 +30,7 @@ export default function RootLayout({
             </main>
             <Footer/>
           </div>
-        </SessionProvider>
+        </ClerkProvider>
       </body>
       
     </html>

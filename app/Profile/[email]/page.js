@@ -6,21 +6,22 @@ import Image from 'next/image';
 import ReviewsCarousel from '@/components/Review/page';
 import { useParams } from 'next/navigation';
 
+
 export default function ProfilePage() {
   const params = useParams();
-  const userid = params?.userid; // Extract `userid` safely
+  const email = params?.email; // Extract `userid` safely
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null); // Added to handle errors
 
   useEffect(() => {
-    if (!userid) return;
+    if (!email) return;
 
     // Fetch user data and related information
     const fetchData = async () => {
       try {
         // Fetch user data
-        const userRes = await fetch(`/api/users/${userid}`);
+        const userRes = await fetch(`/api/users/${email}`);
         if (!userRes.ok) {
           throw new Error('Failed to fetch user data');
         }
@@ -36,7 +37,7 @@ export default function ProfilePage() {
     };
 
     fetchData();
-  }, [userid]);
+  }, [email]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -112,7 +113,7 @@ export default function ProfilePage() {
       {/* Reviews */}
       <div className="mb-6">
         <h2 className="text-xl font-semibold">Reviews</h2>
-        <ReviewsCarousel userId={userid} />
+        <ReviewsCarousel userId={email} />
       </div>
     </div>
   );
