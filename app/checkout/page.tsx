@@ -5,7 +5,7 @@ import convertToSubcurrency from "@/lib/convertToSubcurrency";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Suspense } from 'react';
-import { useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 
 if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is not defined");
@@ -14,13 +14,13 @@ if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 export default function Checkout() {
-  const searchParams = useSearchParams();
+  const params = useParams();
 
   // Extract data from query params
-  const amount = parseFloat(searchParams.get("price") || "0");
-  const assignedUser = searchParams.get("user") || "Someone";
+  const amount = params.price || 0;
+  const assignedUser = params.user || "Someone";
 
-  if (amount <= 0) {
+  if (amount != 0) {
     return (
       <div className="text-center text-red-500 py-10">
         <h2 className="text-2xl font-bold">Invalid Checkout Details</h2>

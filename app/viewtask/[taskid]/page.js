@@ -118,7 +118,7 @@ export default function TaskDetailsPage() {
     );
   }
   const handleAssign = (offer) => {
-    const taskPrice = task.price; // Ensure this is the correct price
+    const taskPrice = parseFloat(task.price); // Ensure this is the correct price
     const assignedUser = offer.userId; // User being assigned
   
     // Navigate to the checkout page
