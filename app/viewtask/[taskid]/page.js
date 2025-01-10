@@ -18,7 +18,6 @@ export default function TaskDetailsPage() {
   const [offers, setOffers] = useState([]);
   const [showOfferBox, setShowOfferBox] = useState(false);
   const [offerText, setOfferText] = useState('');
-  const [userData, setUserData] = useState(null);
   const [editingOffer, setEditingOffer] = useState(false);
   const [existingOffer, setExistingOffer] = useState(null);
   
@@ -117,10 +116,6 @@ export default function TaskDetailsPage() {
   };
   
   const isTaskOwner = user?.emailAddresses[0]?.emailAddress === task?.user.email;
-  
-
-  const avatarUrl = userData?.avatarUrl || '/default-avatar.svg';
-  const username = userData?.username || 'Unknown User';
   
 
   const statusColor =
