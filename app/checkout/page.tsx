@@ -4,6 +4,7 @@ import CheckoutPage from "@/components/Checkout/checkoutpage";
 import convertToSubcurrency from "@/lib/convertToSubcurrency";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import { Suspense } from 'react';
 import { useSearchParams } from "next/navigation";
 
 if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
@@ -47,7 +48,7 @@ export default function Checkout() {
             currency: "try", // Turkish Lira
           }}
         >
-          <CheckoutPage amount={amount} />
+          <Suspense fallback={<div>Loading...</div>}> <CheckoutPage amount={amount} /> </Suspense>
         </Elements>
       </main>
     </section>
