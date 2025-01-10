@@ -14,7 +14,7 @@ export async function POST(req) {
   const usersCollection = db.collection('users');
 
   // Check if user already exists
-  const existingUser = await usersCollection.findOne({ userId });
+  const existingUser = await usersCollection.findOne({ email: user.email_addresses?.[0]?.email_address });
   if (existingUser) {
     return NextResponse.json({ error: 'User already exists' }, { status: 409 });
   }
