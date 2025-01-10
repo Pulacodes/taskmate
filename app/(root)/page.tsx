@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Hero from "@/components/Hero";
 export default function Home() {
 
@@ -21,6 +21,9 @@ export default function Home() {
           return;
         }
         const data = await response.json();  
+        if(!data){
+          console.log("error fetching data");
+        }
     };
 
     registerUser();
