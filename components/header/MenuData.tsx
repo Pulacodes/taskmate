@@ -60,18 +60,6 @@ const menuData: Menu[] = [
         path: "/my-tasks",
         newTab: false,
       },
-      {
-        id: 46,
-        title: "Sign In Page",
-        path: "/Login",
-        newTab: false,
-      },
-      {
-        id: 47,
-        title: "Sign Up Page",
-        path: "/signup",
-        newTab: false,
-      },
     ],
   },
 ];
