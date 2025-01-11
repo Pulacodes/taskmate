@@ -140,7 +140,7 @@ export default function TaskDetailsPage() {
                       src={task.user.avatar || '/default-avatar.svg'} // Use user avatar or a default one
                       width={100}
                       height={100}
-                      alt={`${username}'s profile avatar`}
+                      alt={`${task.user.username}'s profile avatar`}
                       className='rounded-full'
                     />
                     </Link>
