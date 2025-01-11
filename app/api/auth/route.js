@@ -14,7 +14,7 @@ export async function POST(req) {
   const usersCollection = db.collection('users');
 
   // Check if user already exists
-  const existingUser = await usersCollection.findOne({ email: user.email_addresses?.[0]?.email_address });
+  const existingUser = await usersCollection.findOne({ userId });
   if (existingUser) {
     return NextResponse.json({ error: 'User already exists' }, { status: 409 });
   }
@@ -38,7 +38,7 @@ export async function POST(req) {
     email: user.email_addresses?.[0]?.email_address, // Get the primary email address
     username: user.username || `${user.first_name} ${user.last_name}`, // Use username or fallback to full name
     avatarUrl: user.profile_image_url, // Get avatar URL
-    bannerUrl: null,
+    bannerUrl: "banner.jpg",
     reviews: [],
     customerDetails: {
       id: 'cus_NffrFeUfNV2Hib',
