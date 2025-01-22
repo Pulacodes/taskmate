@@ -37,7 +37,7 @@ const assignedUser = searchParams.get("user") || "Someone";
     e.preventDefault();
     
     if (paymentMethod === "card") {
-      window.location.href = "https://www.paypal.com/your-paypal-link";
+      window.location.href = "https://www.paypal.com/ncp/payment/TSEUUACWVBFA4";
     } else {
       alert("Task assigned successfully! A TaskMate official will collect Payment at provided address.");
       router.push("/tasks"); // Redirect to tasks page
