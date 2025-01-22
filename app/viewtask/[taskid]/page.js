@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,6 +11,7 @@ import Link from 'next/link';
 export default function TaskDetailsPage() {
   const { user } = useUser();
   const params = useParams();
+  const router = useRouter();
   const taskid = params?.taskid;
 
 
@@ -112,7 +114,7 @@ export default function TaskDetailsPage() {
     const assignedUser = offer.userId; // User being assigned
   
     // Navigate to the checkout page
-    window.location.href = `/checkout?price=${taskPrice}&user=${encodeURIComponent(assignedUser)}`;
+    router.push(`/checkout?price=${taskPrice}&user=${encodeURIComponent(assignedUser)}`);
   };
   
   const isTaskOwner = user?.emailAddresses[0]?.emailAddress === task?.user.email;
@@ -128,11 +130,11 @@ export default function TaskDetailsPage() {
       : 'text-gray-500';
 
   return (
-    <section className="overflow-hidden py-16 md:py-20 lg:py-28">
+    <section className="overflow-hidden py-16 md:py-20 lg:py-28 bg-black">
       
-      <div className="min-h-screen bg-gray-100 py-10 px-5">
+      <div className="min-h-screen bg-black bg-cover bg-center pb-16 py-10 px-5">
     
-        <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
+        <div className="max-w-4xl mx-auto bg-white bg-opacity-80 rounded-lg shadow-lg p-6">
           <div className="px-4 pb-6 text-center lg:pb-8">
                   <div className="relative  mx-auto w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-30 sm:max-w-30 sm:p-3">
                   <Link href={`/Profile/${task.user.email}`}>

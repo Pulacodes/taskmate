@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import {nextui} from '@nextui-org/theme';
 import type { Config } from "tailwindcss";
 import defaultTheme from "tailwindcss/defaultTheme";
-const colors = require("tailwindcss/colors");
+import colors from "tailwindcss/colors";
 
 const config: Config = {
   content: [
@@ -39,7 +40,7 @@ const config: Config = {
         white: "#FFFFFF",
         black: {
           // ...colors.black,
-          DEFAULT: "#1C2434",
+          DEFAULT: "#2B2727",
           2: "#010101",
         },
         red: {

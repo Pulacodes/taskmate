@@ -1,6 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 interface Task {
   _id: string;
@@ -91,7 +93,7 @@ const TaskList: React.FC = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <h2 className="text-2xl text-white font-bold mb-4">Task List</h2>
+      <h2 className="text-2xl text-center text-white font-bold mb-4">Task List</h2>
 
       {/* Category Filter Dropdown */}
       <div className="mb-6">
@@ -103,7 +105,7 @@ const TaskList: React.FC = () => {
         </label>
         <select
           id="category"
-          className="bg-gray-800 text-white border border-gray-600 rounded-md p-2 w-full"
+          className="bg-black text-white border border-gray-600 rounded-md p-2 "
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
         >
@@ -132,6 +134,8 @@ const TaskList: React.FC = () => {
                 <div className="flex items-center p-4 border-b border-transparent">
                   <img
                     src={task.user.avatar}
+                    width={50}
+                    height={50}
                     alt={`${task.user.username}'s avatar`}
                     className="w-10 h-10 rounded-full mr-3"
                   />
@@ -143,7 +147,7 @@ const TaskList: React.FC = () => {
 
               {/* Task Content */}
               <div className="p-4">
-                <h3 className="text-lg text-indigo-700 font-bold mb-2">{task.title}</h3>
+                <h3 className="text-lg text-yellow-600 font-bold mb-2">{task.title}</h3>
                 <p className="text-gray-400 mb-4">{task.content}</p>
                 <p className="text-lg font-bold text-white mb-2">TL {task.price}</p>
                 <p className="text-sm text-gray-400">
@@ -153,7 +157,7 @@ const TaskList: React.FC = () => {
 
               {/* Status Dot */}
               <div className="absolute bottom-4 right-4">
-                <img src={getStatusDot(task.status)} alt={task.status} className="w-4 h-4" />
+                <Image src={getStatusDot(task.status)} width={10} height={10} alt={task.status} className="w-4 h-4" />
               </div>
             </div>
           ))}

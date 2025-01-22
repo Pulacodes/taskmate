@@ -4,13 +4,13 @@ import React from 'react';
 
 const About = () => {
   return (
-    <section className="overflow-hidden py-16 md:py-20 lg:py-28" >
-      <div className="flex flex-col items-center px-6 py-12 space-y-6 bg-gray-50 min-h-screen">
-      <h1 className="text-4xl font-bold text-center text-gray-800">About TaskMe</h1>
+    <section className="overflow-hidden bg-black py-16 md:py-20 lg:py-28" >
+      <div className="flex bg-[url('/taskback.jpg')] text-white flex-col items-center px-6 py-12 space-y-6  min-h-screen">
+      <h1 className="text-4xl font-bold text-center text-gray-200">About TaskMate</h1>
       
-      <section className="max-w-2xl text-gray-700 space-y-4">
+      <section className="max-w-2xl text-gray-100 space-y-4">
         <p>
-          Welcome to <strong>TaskMe</strong>! Our platform connects university students, allowing them to post and accept tasks for money. Whether you need help with a project, tutoring, or daily errands, TaskMe is designed to make life easier by bringing students together.
+          Welcome to <strong>TaskMate</strong>! Our platform connects university students, allowing them to post and accept tasks for money. Whether you need help with a project, tutoring, or daily errands, TaskMate is designed to make life easier by bringing students together.
         </p>
 
         <p>
@@ -18,8 +18,8 @@ const About = () => {
         </p>
       </section>
 
-      <section className="max-w-2xl text-gray-700 space-y-4">
-        <h2 className="text-2xl font-semibold text-gray-800">Why Choose TaskMe?</h2>
+      <section className="max-w-2xl text-gray-100 space-y-4">
+        <h2 className="text-2xl font-semibold text-gray-200">Why Choose TaskMate?</h2>
         <ul className="list-disc pl-6 space-y-2">
           <li><strong>Convenience:</strong> Easily post and browse tasks within your university community.</li>
           <li><strong>Opportunity:</strong> Earn money by completing tasks for your peers.</li>
@@ -27,8 +27,8 @@ const About = () => {
         </ul>
       </section>
 
-      <section className="max-w-2xl text-gray-700 space-y-4">
-        <h2 className="text-2xl font-semibold text-gray-800">How It Works</h2>
+      <section className="max-w-2xl text-gray-100 space-y-4">
+        <h2 className="text-2xl font-semibold text-gray-200">How It Works</h2>
         <ol className="list-decimal pl-6 space-y-2">
           <li><strong>Sign up or Log in:</strong> Create an account with TaskMe to get started.</li>
           <li><strong>Post a Task:</strong> Need something done? Upload a task with a description and price.</li>
@@ -37,10 +37,10 @@ const About = () => {
         </ol>
       </section>
 
-      <section className="max-w-2xl text-gray-700 space-y-4">
-        <h2 className="text-2xl font-semibold text-gray-800">Our Mission</h2>
+      <section className="max-w-2xl text-gray-100 space-y-4">
+        <h2 className="text-2xl font-semibold text-gray-200">Our Mission</h2>
         <p>
-          At TaskMe, our mission is to create a supportive ecosystem that helps students enhance their skills, earn money, and make connections within their academic communities. We believe in empowering students to help one another and make their university experience both productive and rewarding.
+          At TaskMate, our mission is to create a supportive ecosystem that helps students enhance their skills, earn money, and make connections within their academic communities. We believe in empowering students to help one another and make their university experience both productive and rewarding.
         </p>
       </section>
     </div>

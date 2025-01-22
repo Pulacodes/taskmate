@@ -62,10 +62,10 @@ const AddTask: React.FC = () => {
 
   return (
     
-    <div className="min-h-screen flex items-center justify-center bg-[url('/banner.jpg')] bg-cover bg-center py-30">
+    <div className="min-h-screen flex items-center justify-center bg-[url('/taskback.jpg')] bg-cover bg-center py-30">
       
-      <div className="bg-white shadow-md rounded-lg p-6 max-w-lg w-full">
-        <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">Add New Task</h2>
+      <div className="bg-black bg-opacity-80 shadow-md rounded-lg p-6 max-w-lg w-full">
+        <h2 className="text-2xl font-bold text-center text-gray-200 mb-6">Add New Task</h2>
         
         <div className="space-y-4">
           <input
@@ -115,12 +115,11 @@ const AddTask: React.FC = () => {
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
-          {/* Display default status */}
-          <div className="text-gray-600">Status: <span className="font-semibold text-blue-500">Available</span></div>
+          
 
           <button
             onClick={addTask}
-            className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
+            className="w-full py-3 bg-yellow-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
           >
             Add Task
           </button>

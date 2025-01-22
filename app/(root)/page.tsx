@@ -30,7 +30,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="overflow-hidden min-h-screen bg-white">
+    <div className="overflow-hidden min-h-screen bg-black">
       {/* Hero Section */}
       <br/>
       <Hero/>
@@ -41,12 +41,12 @@ export default function Home() {
       {/* Popular Task Categories */}
       <section className="py-16">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl font-semibold mb-8 text-black">
+          <h2 className="text-3xl font-semibold mb-8 text-white">
             Popular Task Categories
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {/* Task Category Card */}
-            <div className="bg-gray-700 shadow-md rounded-lg p-6">
+            <div className="bg-gray-800 bg-opacity-65 card  shadow-md rounded-lg p-6">
               <Image
                 src="/tutor.jpg"
                 alt="Academic Help"
@@ -62,7 +62,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="bg-gray-700 shadow-md rounded-lg p-6">
+            <div className="bg-gray-800 bg-opacity-65 shadow-md rounded-lg p-6">
               <Image
                 src="/graphic-design.jpg"
                 alt="Graphic Design"
@@ -79,7 +79,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="bg-gray-700 shadow-md rounded-lg p-6">
+            <div className="bg-gray-800 bg-opacity-65 shadow-md rounded-lg p-6">
               <Image
                 src="/coding.jpg"
                 alt="Coding Tasks"

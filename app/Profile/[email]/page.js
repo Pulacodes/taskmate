@@ -47,7 +47,7 @@ export default function ProfilePage() {
   const { bannerUrl, avatarUrl, username, aboutMe, tasks, assignedTasks, completedTasks } = userData;
 
   return (
-    <div className="mx-auto max-w-242.5">
+    <div className="mx-auto ">
       <Breadcrumb pageName="Profile" description="User details" />
 
       {/* Profile Banner */}
@@ -105,14 +105,14 @@ export default function ProfilePage() {
         <h4 className="font-semibold text-black dark:text-white">
           About Me
         </h4>
-        <p className="mt-4.5">
+        <p className="mt-4.5 mb-15">
           {aboutMe || 'This user has not shared any information about themselves.'}
         </p>
       </div>
 
       {/* Reviews */}
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold">Reviews</h2>
+      <div className="mb-6 text-center">
+        <h2 className="text-xl text-center font-semibold">Reviews</h2>
         <ReviewsCarousel userId={email} />
       </div>
     </div>
