@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import {
   Select,
   SelectContent,
@@ -21,6 +22,7 @@ interface Task {
 const AddTask: React.FC = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const router = useRouter();
   const [price, setPrice] = useState('');
   const [Duedate, setDuedate] = useState('');
   const [category, setCategory] = useState('');
@@ -55,6 +57,7 @@ const AddTask: React.FC = () => {
       setPrice('');
       setDuedate('');
       setCategory('');
+      router.push('/viewtask');
     } else {
       alert('Failed to add task');
     }
