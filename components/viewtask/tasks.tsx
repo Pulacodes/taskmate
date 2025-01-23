@@ -41,7 +41,7 @@ const TaskList: React.FC = () => {
       const data: Task[] = await response.json();
 
       // Filter available tasks
-      const availableTasks = data.filter((task) => task.status === 'available');
+      const availableTasks = data.filter((task) => task.status === 'available' || 'Available');
       setTasks(availableTasks);
 
       // Extract unique categories
@@ -127,7 +127,7 @@ const TaskList: React.FC = () => {
             <div
               key={task._id}
               onClick={() => handleCardClick(task._id)}
-              className="relative bg-black bg-opacity-80 shadow-md rounded-md cursor-pointer hover:bg-gray-700 transition-colors"
+              className="relative bg-gray-500 bg-clip-padding backdrop-filter  backdrop-blur bg-opacity-10 backdrop-saturate-100 backdrop-contrast-100 shadow-md rounded-md cursor-pointer hover:bg-gray-700 transition-colors"
             >
               {/* User Info */}
               {task.user && (
@@ -147,7 +147,7 @@ const TaskList: React.FC = () => {
 
               {/* Task Content */}
               <div className="p-4">
-                <h3 className="text-lg text-yellow-600 font-bold mb-2">{task.title}</h3>
+                <h3 className="text-lg text-blue-600 font-bold mb-2">{task.title}</h3>
                 <p className="text-gray-400 mb-4">{task.content}</p>
                 <p className="text-lg font-bold text-white mb-2">TL {task.price}</p>
                 <p className="text-sm text-gray-400">

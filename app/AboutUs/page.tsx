@@ -4,8 +4,8 @@ import React from 'react';
 
 const About = () => {
   return (
-    <section className="overflow-hidden bg-black py-16 md:py-20 lg:py-28" >
-      <div className="flex bg-[url('/taskback.jpg')] text-white flex-col items-center px-6 py-12 space-y-6  min-h-screen">
+    <section className="overflow-hidden bg-gradient-to-r from-neutral-600 via-gray-950 to-blue-950 py-16 md:py-20 lg:py-28" >
+      <div className="flex bg-gradient-to-r from-neutral-600 via-gray-950 to-blue-950 text-white flex-col items-center px-6 py-12 space-y-6  min-h-screen">
       <h1 className="text-4xl font-bold text-center text-gray-200">About TaskMate</h1>
       
       <section className="max-w-2xl text-gray-100 space-y-4">

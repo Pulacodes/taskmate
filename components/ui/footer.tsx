@@ -5,18 +5,18 @@ import Link from "next/link";
 const Footer = () => {
   return (
     <>
-      <footer className="relative z-10 bg-gray-800 pt-16 dark:bg-gray-dark md:pt-20 lg:pt-24">
+      <footer className="relative z-10 bg-gray-800  pt-16 dark:bg-gray-dark md:pt-20 lg:pt-24">
         <div className="container">
           <div className="-mx-4 flex flex-wrap">
             <div className="w-full px-4 md:w-1/2 lg:w-4/12 xl:w-5/12">
               <div className="mb-12 max-w-[360px] lg:mb-16">
                 <Link href="/" className="mb-8 inline-block">
                   <Image
-                    src="/task-mate.svg"
+                    src="/taskmatewhite.png"
                     alt="logo"
                     className="dark:hidden"
                     width={140}
-                    height={30}
+                    height={10}
                   />
                   
                 </Link>
@@ -74,7 +74,7 @@ const Footer = () => {
 
             <div className="w-full px-4 sm:w-1/2 md:w-1/2 lg:w-2/12 xl:w-2/12">
               <div className="mb-12 lg:mb-16">
-                <h2 className="mb-10 text-xl font-bold text-yellow-500 dark:text-white">
+                <h2 className="mb-10 text-xl font-bold text-blue-500 dark:text-white">
                   Useful Links
                 </h2>
                 <ul>
@@ -106,43 +106,9 @@ const Footer = () => {
               </div>
             </div>
 
-            <div className="w-full px-4 sm:w-1/2 md:w-1/2 lg:w-2/12 xl:w-2/12">
-              <div className="mb-12 lg:mb-16">
-                <h2 className="mb-10 text-xl font-bold text-yellow-500 dark:text-white">
-                  Terms
-                </h2>
-                <ul>
-                  <li>
-                    <Link
-                      href="/"
-                      className="mb-4 inline-block text-base text-gray-400 duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
-                    >
-                      TOS
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/"
-                      className="mb-4 inline-block text-base text-gray-400 duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
-                    >
-                      Privacy Policy
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/"
-                      className="mb-4 inline-block text-base text-gray-400 duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
-                    >
-                      Refund Policy
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
             <div className="w-full px-4 md:w-1/2 lg:w-4/12 xl:w-3/12">
               <div className="mb-12 lg:mb-16">
-                <h2 className="mb-10 text-xl font-bold text-yellow-500 dark:text-white">
+                <h2 className="mb-10 text-xl font-bold text-blue-500 dark:text-white">
                   Support & Help
                 </h2>
                 <ul>

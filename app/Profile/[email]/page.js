@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Breadcrumb from '@/components/common/Breadcrumb';
 import Image from 'next/image';
 import ReviewsCarousel from '@/components/Review/page';
 import { useParams } from 'next/navigation';
@@ -47,8 +46,7 @@ export default function ProfilePage() {
   const { bannerUrl, avatarUrl, username, aboutMe, tasks, assignedTasks, completedTasks } = userData;
 
   return (
-    <div className="mx-auto ">
-      <Breadcrumb pageName="Profile" description="User details" />
+    <div className="mx-auto min-h-screen ">
 
       {/* Profile Banner */}
       <div className="relative z-20 h-35 md:h-65">

@@ -43,7 +43,7 @@ const Header = () => {
         className={`header left-0 top-0 z-40 flex w-full items-center ${
           sticky
             ? 'fixed z-[9999] bg-gray-800 !bg-opacity-80 shadow-sticky backdrop-blur-sm transition'
-            : 'absolute bg-gray-800'
+            : 'absolute bg-transparent'
         }`}
       >
         <div className="container">
@@ -56,10 +56,10 @@ const Header = () => {
                 }`}
               >
                 <Image
-                  src="/task-mate.svg"
+                  src="/taskmatewhite.png"
                   alt="Taskmate"
                   width={100}
-                  height={20}
+                  height={10}
                   className="cursor-pointer"
                   unoptimized
                   
@@ -106,8 +106,8 @@ const Header = () => {
                             href={menuItem.path}
                             className={`flex py-2 text-base lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 ${
                               pathname === menuItem.path
-                                ? 'text-yellow-600 dark:text-white'
-                                : 'text-white hover:text-yellow-600 dark:text-white/70 dark:hover:text-white'
+                                ? 'text-primary dark:text-white'
+                                : 'text-white hover:text-primary dark:text-white/70 dark:hover:text-white'
                             }`}
                           >
                             {menuItem.title}
@@ -160,7 +160,8 @@ const Header = () => {
       </SignedIn>
       <SignedOut>
         {/* Signed out users get sign in button */}
-        <SignInButton />
+        <div className='tex-white bg-white border-lg '><SignInButton /></div>
+        
       </SignedOut>
         </div>
             </div>

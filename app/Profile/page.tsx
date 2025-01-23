@@ -1,5 +1,5 @@
 'use client';
-import Breadcrumb from "@/components/common/Breadcrumb";
+
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
@@ -36,7 +36,7 @@ const email = user?.emailAddresses[0]?.emailAddress;
   return (
     <DefaultLayout>
       <div className="mx-auto max-w-242.5">
-        <Breadcrumb pageName="Profile" description="Personal user details"/>
+        
 
         <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="relative z-20 h-35 md:h-65">
@@ -136,7 +136,7 @@ const email = user?.emailAddresses[0]?.emailAddress;
                 </label>
               </div>
             </div>
-            <div className="mt-4">
+            <div className="mt-4 min-h-screen">
               <h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">
                 {username}
               </h3>

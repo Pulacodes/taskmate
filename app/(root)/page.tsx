@@ -30,7 +30,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="overflow-hidden min-h-screen bg-black">
+    <div className="overflow-hidden min-h-screen bg-gradient-to-r from-neutral-600 via-gray-950 to-blue-950">
       {/* Hero Section */}
       <br/>
       <Hero/>

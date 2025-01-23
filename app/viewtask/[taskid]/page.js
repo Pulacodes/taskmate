@@ -122,7 +122,7 @@ export default function TaskDetailsPage() {
 
   const statusColor =
     task.status === 'available'
-      ? 'text-green-500'
+      ? 'text-blue-500'
       : task.status === 'Assigned'
       ? 'text-purple-500'
       : task.status === 'Completed'
@@ -130,11 +130,11 @@ export default function TaskDetailsPage() {
       : 'text-gray-500';
 
   return (
-    <section className="overflow-hidden py-16 md:py-20 lg:py-28 bg-black">
+    <section className="overflow-hidden py-16 md:py-20 lg:py-28 bg-gradient-to-r from-neutral-600 via-gray-950 to-blue-950">
       
-      <div className="min-h-screen bg-black bg-cover bg-center pb-16 py-10 px-5">
+      <div className="min-h-screen bg-gradient-to-r from-neutral-600 via-gray-950 to-blue-950 bg-cover bg-center pb-16 py-10 px-5">
     
-        <div className="max-w-4xl mx-auto bg-white bg-opacity-80 rounded-lg shadow-lg p-6">
+        <div className="max-w-4xl mx-auto bg-black bg-opacity-65 rounded-lg shadow-lg p-6">
           <div className="px-4 pb-6 text-center lg:pb-8">
                   <div className="relative  mx-auto w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-30 sm:max-w-30 sm:p-3">
                   <Link href={`/Profile/${task.user.email}`}>
@@ -149,20 +149,20 @@ export default function TaskDetailsPage() {
                   </div>
                 </div>
           
-                <h3 className="text-center mb-1.5 text-2xl font-semibold text-black dark:text-white">
+                <h3 className="text-center mb-1.5 text-2xl font-semibold text-white dark:text-white">
                   {task.user.username}
                 </h3>
                   
                     
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">{task.title}</h1>
-          <p className="text-gray-600 mb-4">{task.content}</p>
-          <p className={`mb-4 font-semibold ${statusColor}`}>
+          <h1 className="text-3xl text-center font-bold text-gray-200 mb-4">Title: {task.title}</h1>
+          <p className=" text-center text-gray-300 mb-4">{task.content}</p>
+          <p className={`mb-4 font-bold ${statusColor}`}>
             {task.status}
           </p>
 
-          <div className="flex items-center justify-between bg-gray-100 p-4 rounded-lg mb-6">
-            <p className="text-lg font-bold text-gray-800">
-              Price: TL{task.price.toFixed(2)}
+          <div className="flex items-center justify-between  p-4 rounded-lg mb-6">
+            <p className="text-lg font-bold text-center text-white">
+              Budget Price: TL{task.price.toFixed(2)}
             </p>
             {!isTaskOwner && !existingOffer && (
               <button
@@ -205,15 +205,18 @@ export default function TaskDetailsPage() {
             </div>
           )}
           
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Offers:</h2>
+          <h2 className="text-2xl font-bold text-gray-200 mb-4">Offers:</h2>
           {offers.length === 0 ? (
-            <p className="text-gray-500">No offers have been made yet.</p>
+            <p className="text-gray-300">No offers have been made yet.</p>
           ) : (
             <ul className="space-y-4">
               {offers.map((offer, index) => (
                 <li key={index} className="bg-gray-50 p-4 rounded-lg shadow-md">
-                  <p className="font-bold text-gray-800">{offer.userId}</p>
-                  <p className="text-gray-600">{offer.message}</p>
+                  <Link href={`/Profile/${offer.userId}`}>
+                  <p className="font-bold text-gray-200">{offer.userId}</p>
+                  </Link>
+                  
+                  <p className="text-gray-300">{offer.message}</p>
                   {!isTaskOwner && existingOffer && (
               <button
                 className="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-yellow-600"
