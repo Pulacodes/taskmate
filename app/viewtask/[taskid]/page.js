@@ -60,6 +60,7 @@ export default function TaskDetailsPage() {
 
     const payload = {
       userId: user?.emailAddresses[0]?.emailAddress,
+      name : user?.username,
       amount: parseFloat(prompt('Enter your offer amount:', existingOffer?.amount || '0')), // Prompt for amount
       message: offerText,
     };
@@ -109,9 +110,10 @@ export default function TaskDetailsPage() {
       </div>
     );
   }
+  
   const handleAssign = (offer) => {
     const taskPrice = parseFloat(task.price); // Ensure this is the correct price
-    const assignedUser = offer.userId; // User being assigned
+    const assignedUser = offer.name; // User being assigned
   
     // Navigate to the checkout page
     router.push(`/checkout?price=${taskPrice}&user=${encodeURIComponent(assignedUser)}`);
@@ -213,22 +215,11 @@ export default function TaskDetailsPage() {
               {offers.map((offer, index) => (
                 <li key={index} className="bg-gray-50 p-4 rounded-lg shadow-md">
                   <Link href={`/Profile/${offer.userId}`}>
-                  <p className="font-bold text-gray-200">{offer.userId}</p>
+                  <p className="font-bold text-gray-200">{offer.name}</p>
                   </Link>
                   
                   <p className="text-gray-300">{offer.message}</p>
-                  {!isTaskOwner && existingOffer && (
-              <button
-                className="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-yellow-600"
-                onClick={() => {
-                  setShowOfferBox(true);
-                  setEditingOffer(true);
-                  setOfferText(existingOffer.message);
-                }}
-              >
-                Edit offer
-              </button>
-            )}
+                  
             {isTaskOwner &&  (
               <button
                 className="bg-primary text-white px-4 py-2 absolute-left rounded-md hover:bg-gray-600"

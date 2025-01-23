@@ -1,5 +1,7 @@
 "use client";
 import Image from "next/image";
+import Features from "@/components/Features";
+import Companies from "../../components/Companies"
 import React from "react";
 import { useEffect } from "react";
 import Hero from "@/components/Hero";
@@ -36,7 +38,9 @@ export default function Home() {
       <Hero/>
       {/* Featured Available Tasks */}
       
+      <Companies/>
       
+      <Features/>
 
       {/* Popular Task Categories */}
       <section className="py-16">

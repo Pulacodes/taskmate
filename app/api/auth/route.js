@@ -37,8 +37,8 @@ export async function POST(req) {
     userId,
     email: user.email_addresses?.[0]?.email_address, // Get the primary email address
     username: user.username || `${user.first_name} ${user.last_name}`, // Use username or fallback to full name
-    avatarUrl: user.profile_image_url, // Get avatar URL
-    bannerUrl: "banner.jpg",
+    avatarUrl: user.profile_image_url || '/avatar.svg', // Get avatar URL
+    bannerUrl: "/banner.jpg",
     reviews: [],
     customerDetails: {
       id: 'cus_NffrFeUfNV2Hib',

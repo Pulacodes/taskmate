@@ -54,6 +54,7 @@ export async function POST(req, { params }) {
         $push: {
           offers: {
             userId: offerData.userId,
+            name: offerData.name,
             amount: offerData.amount,
             message: offerData.message || '',
             createdAt: new Date(),

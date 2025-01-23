@@ -76,7 +76,7 @@ export default function CheckoutForm() {
         </label>
       )}
 
-      <button type="submit" className="w-full p-3 bg-green-500 text-white rounded-md font-bold">Proceed</button>
+      <button type="submit" className="w-full p-3 bg-blue-500 text-white rounded-md font-bold">Proceed</button>
     </form>
   );
 }
