@@ -25,16 +25,47 @@ export default function CheckoutForm() {
     );
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (paymentMethod === "card") {
-      window.location.href = "https://www.paypal.com/ncp/payment/TSEUUACWVBFA4";
-    } else {
-      alert("Task assigned successfully! The assignee will collect cash at the provided address.");
-      router.push("/tasks"); // Redirect to tasks page
+  
+    const taskId = searchParams.get("taskId"); // Ensure taskId is passed in URL
+    if (!taskId) {
+      alert("Task ID is missing. Please try again.");
+      return;
+    }
+  
+    try {
+      const response = await fetch("/api/tasks/assign", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          taskId,
+          assignedUser,
+          paymentMethod,
+          address,
+          requirements,
+          taskType,
+          location,
+        }),
+      });
+  
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to assign task.");
+      }
+  
+      if (paymentMethod === "card") {
+        window.location.href = "https://www.paypal.com/ncp/payment/TSEUUACWVBFA4";
+      } else {
+        alert("Task assigned successfully! The assignee will collect cash at the provided address.");
+        router.push("/tasks");
+      }
+    } catch (error) {
+      console.error("Error assigning task:", error);
+      alert("Error assigning task. Please try again.");
     }
   };
+  
 
   return (
     <form onSubmit={handleSubmit} className="text-left max-w-2xl mx-auto">

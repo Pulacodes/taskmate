@@ -59,8 +59,10 @@ const TaskList: React.FC = () => {
 
   // Handle filtering tasks by category
   useEffect(() => {
+    
     if (selectedCategory === 'all') {
-      setFilteredTasks(tasks);
+      const filtered = tasks.filter((task) => task.status === 'available');
+      setFilteredTasks(filtered);
     } else {
       const filtered = tasks.filter((task) => task.category === selectedCategory);
       setFilteredTasks(filtered);

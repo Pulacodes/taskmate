@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
+import TaskCompletion from "../../../components/TaskCompletion/TaskCompletion"; 
+import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -116,7 +118,7 @@ export default function TaskDetailsPage() {
     const assignedUser = offer.name; // User being assigned
   
     // Navigate to the checkout page
-    router.push(`/checkout?price=${taskPrice}&user=${encodeURIComponent(assignedUser)}`);
+    router.push(`/checkout?price=${taskPrice}&user=${encodeURIComponent(assignedUser)}&taskId=${taskid}`);
   };
   
   const isTaskOwner = user?.emailAddresses[0]?.emailAddress === task?.user.email;
@@ -125,8 +127,8 @@ export default function TaskDetailsPage() {
   const statusColor =
     task.status === 'available'
       ? 'text-blue-500'
-      : task.status === 'Assigned'
-      ? 'text-purple-500'
+      : task.status === 'assigned'
+      ? 'text-yellow-500'
       : task.status === 'Completed'
       ? 'text-red-500'
       : 'text-gray-500';
@@ -158,14 +160,17 @@ export default function TaskDetailsPage() {
                     
           <h1 className="text-3xl text-center font-bold text-gray-200 mb-4">Title: {task.title}</h1>
           <p className=" text-center text-gray-300 mb-4">{task.content}</p>
-          <p className={`mb-4 font-bold ${statusColor}`}>
+          <p className={`mb-4 text-center font-bold ${statusColor}`}>
             {task.status}
           </p>
 
-          <div className="flex items-center justify-between  p-4 rounded-lg mb-6">
+          {task.status === 'avilable' ? ( 
+            <div>
+            <div className="flex items-center justify-between  p-4 rounded-lg mb-6">
             <p className="text-lg font-bold text-center text-white">
               Budget Price: TL{task.price.toFixed(2)}
             </p>
+            <SignedIn>
             {!isTaskOwner && !existingOffer && (
               <button
                 className="bg-primary text-white px-4 py-2 rounded-md hover:bg-gray-600"
@@ -174,6 +179,13 @@ export default function TaskDetailsPage() {
                 Make an offer
               </button>
             )}
+      </SignedIn>
+      <SignedOut>
+        {/* Signed out users get sign in button */}
+        <div className='tex-white bg-white border-lg '><SignInButton /> to bid offer</div>
+        
+      </SignedOut>
+            
             
           </div>
 
@@ -231,6 +243,15 @@ export default function TaskDetailsPage() {
                 </li>
               ))}
             </ul>
+          )}
+          </div>
+
+          ) : (<TaskCompletion 
+            taskId={task._id} 
+            initialRequirements={task.requirements} 
+            initialStatus={task.status}
+            price={task.price}
+          />
           )}
         </div>
       </div>

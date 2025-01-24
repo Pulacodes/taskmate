@@ -1,6 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { useUser } from '@clerk/nextjs';
 
 interface Task {
   _id: string;
@@ -9,8 +11,9 @@ interface Task {
   price: string;
   status: string;
   createdAt: string;
-  category: string;
+  AssignedTo?: string;
   user?: {
+    email?: string;
     avatar: string;
     username: string;
   };
@@ -19,12 +22,12 @@ interface Task {
 const TaskList: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-
+  const [selectedFilter, setSelectedFilter] = useState<string>('all');
+  const { user } = useUser();
   const router = useRouter();
+  
 
-  // Fetch tasks and handle user data directly from API
+  // Fetch tasks assigned to or created by the user
   const fetchTasks = async () => {
     try {
       const response = await fetch('/api/tasks/mytasks', {
@@ -37,33 +40,26 @@ const TaskList: React.FC = () => {
       }
 
       const data: Task[] = await response.json();
-
-      // Filter available tasks
-      const availableTasks = data.filter((task) => task.status === 'available');
-      setTasks(availableTasks);
-
-      // Extract unique categories
-      const uniqueCategories = Array.from(
-        new Set(availableTasks.map((task) => task.category))
-      );
-      setCategories(uniqueCategories);
-
-      // Set filtered tasks initially to all available tasks
-      setFilteredTasks(availableTasks);
+      setTasks(data);
+      setFilteredTasks(data);
     } catch (error) {
       console.error('Error fetching tasks:', error);
     }
   };
-
-  // Handle filtering tasks by category
+  const userEmail = user?.emailAddresses[0]?.emailAddress;
+  // Apply filtering based on user selection
   useEffect(() => {
-    if (selectedCategory === 'all') {
+    
+    if (!userEmail) return; // Ensure user email is set before filtering
+
+    if (selectedFilter === 'all') {
       setFilteredTasks(tasks);
-    } else {
-      const filtered = tasks.filter((task) => task.category === selectedCategory);
-      setFilteredTasks(filtered);
+    } else if (selectedFilter === 'assigned') {
+      setFilteredTasks(tasks.filter((task) => task.AssignedTo === userEmail));
+    } else if (selectedFilter === 'created') {
+      setFilteredTasks(tasks.filter((task) => task.user?.email === userEmail));
     }
-  }, [selectedCategory, tasks]);
+  }, [selectedFilter, tasks, userEmail]);
 
   // Initial fetch
   useEffect(() => {
@@ -91,34 +87,37 @@ const TaskList: React.FC = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <h2 className="text-2xl text-white font-bold mb-4">Task List</h2>
-
-      {/* Category Filter Dropdown */}
-      <div className="mb-6">
-        <label
-          className="block text-white text-sm font-medium mb-2"
-          htmlFor="category"
+      {/* Filter Buttons */}
+      <div className="flex space-x-4 mb-6">
+        <button
+          className={`px-4 py-2 rounded-md ${
+            selectedFilter === 'all' ? 'bg-blue-600' : 'bg-gray-800'
+          } text-white`}
+          onClick={() => setSelectedFilter('all')}
         >
-          Filter by Category:
-        </label>
-        <select
-          id="category"
-          className="bg-gray-800 text-white border border-gray-600 rounded-md p-2 w-full"
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
+          All
+        </button>
+        <button
+          className={`px-4 py-2 rounded-md ${
+            selectedFilter === 'assigned' ? 'bg-blue-600' : 'bg-gray-800'
+          } text-white`}
+          onClick={() => setSelectedFilter('assigned')}
         >
-          <option value="all">All Categories</option>
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
+          Assigned to Me
+        </button>
+        <button
+          className={`px-4 py-2 rounded-md ${
+            selectedFilter === 'created' ? 'bg-blue-600' : 'bg-gray-800'
+          } text-white`}
+          onClick={() => setSelectedFilter('created')}
+        >
+          My Tasks
+        </button>
       </div>
 
       {/* Task Cards */}
       {filteredTasks.length === 0 ? (
-        <p className="text-gray-600">No tasks have been assigned to you yet.</p>
+        <p className="text-gray-400">No tasks found.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {filteredTasks.map((task) => (
@@ -130,8 +129,10 @@ const TaskList: React.FC = () => {
               {/* User Info */}
               {task.user && (
                 <div className="flex items-center p-4 border-b border-transparent">
-                  <img
+                  <Image
                     src={task.user.avatar}
+                    width={50}
+                    height={50}
                     alt={`${task.user.username}'s avatar`}
                     className="w-10 h-10 rounded-full mr-3"
                   />
@@ -153,7 +154,7 @@ const TaskList: React.FC = () => {
 
               {/* Status Dot */}
               <div className="absolute bottom-4 right-4">
-                <img src={getStatusDot(task.status)} alt={task.status} className="w-4 h-4" />
+                <Image src={getStatusDot(task.status)} width={30} height={30} alt={task.status} className="w-4 h-4" />
               </div>
             </div>
           ))}
