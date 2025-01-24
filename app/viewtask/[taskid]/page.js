@@ -164,7 +164,7 @@ export default function TaskDetailsPage() {
             {task.status}
           </p>
 
-          {task.status === 'avilable' ? ( 
+          {task.status === 'available' ? ( 
             <div>
             <div className="flex items-center justify-between  p-4 rounded-lg mb-6">
             <p className="text-lg font-bold text-center text-white">
