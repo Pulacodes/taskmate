@@ -116,9 +116,10 @@ export default function TaskDetailsPage() {
   const handleAssign = (offer) => {
     const taskPrice = parseFloat(task.price); // Ensure this is the correct price
     const assignedUser = offer.name; // User being assigned
+    const assignedemail = offer.userId;
   
     // Navigate to the checkout page
-    router.push(`/checkout?price=${taskPrice}&user=${encodeURIComponent(assignedUser)}&taskId=${taskid}`);
+    router.push(`/checkout?price=${taskPrice}&user=${encodeURIComponent(assignedUser)}&taskId=${taskid}$email=${assignedemail}`);
   };
   
   const isTaskOwner = user?.emailAddresses[0]?.emailAddress === task?.user.email;

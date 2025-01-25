@@ -4,7 +4,7 @@ import { ObjectId } from "mongodb";
 
 export async function POST(req) {
   try {
-    const { taskId, assignedUser, paymentMethod, address, requirements, taskType, location } = await req.json();
+    const { taskId, assignedUser, email, paymentMethod, address, requirements, taskType, location } = await req.json();
 
     if (!taskId || !assignedUser) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -19,10 +19,10 @@ export async function POST(req) {
       { _id: new ObjectId(taskId) },
       {
         $set: {
-          AssignedTo: assignedUser,
+          AssignedTo: email,
           paymentMethod,
           address: paymentMethod === "cash" ? address : "",
-          requirements: {requirements},
+          requirements,
           taskType,
           location: taskType === "physical" ? location : "",
           status: "assigned",
