@@ -29,7 +29,7 @@ export async function POST(req) {
     const user = await userResponse.json();
 
     // Parse request body
-    const { title, content, price, status, category, duedate } = await req.json();
+    const { title, content, price, status, category,location,taskType, duedate } = await req.json();
     if (!title || !content || !price || !category) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
     }
@@ -42,9 +42,9 @@ export async function POST(req) {
       price: parseFloat(price),
       status: status || 'Available',
       requirements: null,
-      location:null,
+      location,
       paymentMethod: null,
-      taskType: null,
+      taskType,
       duedate,
       AssignedTo:null,
       createdAt: new Date(),

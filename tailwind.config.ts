@@ -8,7 +8,7 @@ const config: Config = {
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx,jsx,js}",
-    "./app/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx,js}",
     "./src/**/*.{ts,tsx}",
     "./constants/**/*.{ts,tsx}",
     "./node_modules/@nextui-org/theme/dist/components/(dropdown|select|menu|divider|popover|button|ripple|spinner|listbox|scroll-shadow).js"

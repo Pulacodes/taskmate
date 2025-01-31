@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from 'next/navigation';
 import { useUser } from "@clerk/nextjs";
 import TaskCompletion from "../../../components/TaskCompletion/TaskCompletion"; 
+import ReviewForm from '../../../components/reviewform';
 import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -119,7 +119,7 @@ export default function TaskDetailsPage() {
     const assignedemail = offer.userId;
   
     // Navigate to the checkout page
-    router.push(`/checkout?price=${taskPrice}&user=${encodeURIComponent(assignedUser)}&taskId=${taskid}$email=${assignedemail}`);
+    router.push(`/checkout?price=${taskPrice}&user=${encodeURIComponent(assignedUser)}&taskId=${taskid}&email=${assignedemail}`);
   };
   
   const isTaskOwner = user?.emailAddresses[0]?.emailAddress === task?.user.email;
@@ -130,16 +130,14 @@ export default function TaskDetailsPage() {
       ? 'text-blue-500'
       : task.status === 'assigned'
       ? 'text-yellow-500'
-      : task.status === 'Completed'
-      ? 'text-red-500'
+      : task.status === 'complete'
+      ? 'text-success'
       : 'text-gray-500';
 
   return (
-    <section className="overflow-hidden py-16 md:py-20 lg:py-28 bg-gradient-to-r from-neutral-600 via-gray-950 to-blue-950">
+    <section className="overflow-hidden py-16 md:py-20 lg:py-28 bg-[url('/taskback.jpg')]">
       
-      <div className="min-h-screen bg-gradient-to-r from-neutral-600 via-gray-950 to-blue-950 bg-cover bg-center pb-16 py-10 px-5">
-    
-        <div className="max-w-4xl mx-auto bg-black bg-opacity-65 rounded-lg shadow-lg p-6">
+        <div className="overflow-hidden min-h-screen backdrop-blur bg-opacity-10 backdrop-saturate-100 backdrop-contrast-100 py-16 md:py-20 lg:py-28">
           <div className="px-4 pb-6 text-center lg:pb-8">
                   <div className="relative  mx-auto w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-30 sm:max-w-30 sm:p-3">
                   <Link href={`/Profile/${task.user.email}`}>
@@ -159,11 +157,9 @@ export default function TaskDetailsPage() {
                 </h3>
                   
                     
-          <h1 className="text-3xl text-center font-bold text-gray-200 mb-4">Title: {task.title}</h1>
-          <p className=" text-center text-gray-300 mb-4">{task.content}</p>
-          <p className={`mb-4 text-center font-bold ${statusColor}`}>
-            {task.status}
-          </p>
+          <h1 className="text-3xl text-center font-bold text-gray-200 mb-4">{task.title}</h1>
+          <p className=" text-center text-gray-400 mb-4">{task.content}</p>
+          
 
           {task.status === 'available' ? ( 
             <div>
@@ -183,7 +179,7 @@ export default function TaskDetailsPage() {
       </SignedIn>
       <SignedOut>
         {/* Signed out users get sign in button */}
-        <div className='tex-white bg-white border-lg '><SignInButton /> to bid offer</div>
+        <div className='tex-white bg-white border-lg '><SignInButton /> to bid</div>
         
       </SignedOut>
             
@@ -191,7 +187,7 @@ export default function TaskDetailsPage() {
           </div>
 
           {showOfferBox && (
-            <div className="bg-gray-50 p-4 rounded-lg shadow-lg mb-6">
+            <div className="backdrop-blur bg-opacity-10 backdrop-saturate-100 backdrop-contrast-100 p-4 rounded-lg shadow-lg mb-6">
               <textarea
                 className="w-full border border-gray-300 rounded-md p-2 mb-4"
                 rows="4"
@@ -199,7 +195,7 @@ export default function TaskDetailsPage() {
                 value={offerText}
                 onChange={(e) => setOfferText(e.target.value)}
               ></textarea>
-              <div className="flex justify-end">
+              <div className="flex justify-end ">
                 <button
                   className="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-600 mr-2"
                   onClick={handleSubmitOffer}
@@ -220,22 +216,38 @@ export default function TaskDetailsPage() {
             </div>
           )}
           
-          <h2 className="text-2xl font-bold text-gray-200 mb-4">Offers:</h2>
+          <h2 className="text-2xl font-bold text-gray-200 mb-4 flex items-center justify-between  p-4 rounded-lg mb-6">Offers:</h2>
+          <p className={`mb-4 font-bold flex items-center justify-between  p-4 rounded-lg mb-6 ${statusColor}`}>
+           Status: {task.status}
+          </p>
           {offers.length === 0 ? (
-            <p className="text-gray-300">No offers have been made yet.</p>
+            <p className="text-gray-300 text-center">No offers have been made yet.</p>
           ) : (
             <ul className="space-y-4">
               {offers.map((offer, index) => (
-                <li key={index} className="bg-gray-50 p-4 rounded-lg shadow-md">
+                <li key={index} className="bg-gray-800 bg-opacity-65 p-4 rounded-lg shadow-md">
                   <Link href={`/Profile/${offer.userId}`}>
-                  <p className="font-bold text-gray-200">{offer.name}</p>
+          
+                  <div className="flex items-center p-4 border-b border-white">
+                 
+                  <Image
+                      src={offer.avatar || '/default-avatar.svg'} // Use user avatar or a default one
+                      width={40}
+                      height={40}
+                      alt={`${offer.userId}'s profile avatar`}
+                      className='rounded-full mr-5'
+                    />
+                    <p className="text-bolf text-gray-200 font-semibold">{offer.name}</p>
+                  </div>
+                
                   </Link>
-                  
-                  <p className="text-gray-300">{offer.message}</p>
+                  <br/>
+                  <p className="text-gray-400 font-bold text-center">Bid: TL{offer.amount}</p>
+                  <p className="text-gray-200 text-center">{offer.message}</p>
                   
             {isTaskOwner &&  (
               <button
-                className="bg-primary text-white px-4 py-2 absolute-left rounded-md hover:bg-gray-600"
+                className="bg-primary text-white px-4 py-2 absolute-left flex items-end justify-between rounded-md hover:bg-blue-600"
                 onClick={() => handleAssign(offer)}
               >
                 Assign
@@ -247,7 +259,7 @@ export default function TaskDetailsPage() {
           )}
           </div>
 
-          ) : (<TaskCompletion 
+          ) : task.status === 'complete' ? ( <ReviewForm userId={task.user.email}/>): (<TaskCompletion 
             taskId={task._id} 
             initialRequirements={task.requirements} 
             initialStatus={task.status}
@@ -255,7 +267,7 @@ export default function TaskDetailsPage() {
           />
           )}
         </div>
-      </div>
+      
     </section>
   );
 }

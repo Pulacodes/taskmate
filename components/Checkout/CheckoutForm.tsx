@@ -15,6 +15,7 @@ export default function CheckoutForm() {
 
   const amount = parseFloat(searchParams.get("price") || "0");
   const assignedUser = searchParams.get("user") || "Someone";
+  const email = searchParams.get("email");
 
   if (amount === 0) {
     return (
@@ -27,13 +28,13 @@ export default function CheckoutForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
-    const taskId = searchParams.get("taskId"); // Ensure taskId is passed in URL
+
+    const taskId = searchParams.get("taskId");
     if (!taskId) {
       alert("Task ID is missing. Please try again.");
       return;
     }
-  
+
     try {
       const response = await fetch("/api/tasks/assign", {
         method: "POST",
@@ -41,6 +42,7 @@ export default function CheckoutForm() {
         body: JSON.stringify({
           taskId,
           assignedUser,
+          email,
           paymentMethod,
           address,
           requirements,
@@ -48,24 +50,23 @@ export default function CheckoutForm() {
           location,
         }),
       });
-  
+
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.error || "Failed to assign task.");
       }
-  
+
       if (paymentMethod === "card") {
         window.location.href = "https://www.paypal.com/ncp/payment/TSEUUACWVBFA4";
       } else {
         alert("Task assigned successfully! The assignee will collect cash at the provided address.");
-        router.push("/tasks");
+        router.push("/");
       }
     } catch (error) {
       console.error("Error assigning task:", error);
-      alert("Error assigning task. Please try again.");
+      alert(`Error assigning task`);
     }
   };
-  
 
   return (
     <form onSubmit={handleSubmit} className="text-left max-w-2xl mx-auto">

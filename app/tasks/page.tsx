@@ -8,11 +8,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from 'next/navigation';
+
 
 interface Task {
   title: string;
   content: string;
   category: string;
+  location: string;
+  taskType: string;
   Duedate: string;
   price: number;
   status: string;
@@ -22,8 +26,11 @@ const AddTask: React.FC = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [price, setPrice] = useState('');
+  const [taskType, setTaskType] = useState(" ");
   const [Duedate, setDuedate] = useState('');
+  const [location, setLocation] = useState("");
   const [category, setCategory] = useState('');
+  const router = useRouter();
 
   const addTask = async () => {
     if (!title || !content || !price || !category) {
@@ -36,6 +43,8 @@ const AddTask: React.FC = () => {
       content, 
       category,
       Duedate,
+      taskType,
+      location,
       price: parseFloat(price), 
       status: 'available' // Set default status
     };
@@ -55,6 +64,7 @@ const AddTask: React.FC = () => {
       setPrice('');
       setDuedate('');
       setCategory('');
+      router.push('/viewtask')
       
     } else {
       alert('Failed to add task');
@@ -107,7 +117,23 @@ const AddTask: React.FC = () => {
             onChange={(e) => setPrice(e.target.value)}
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-           <label htmlFor="duedate" className="block text-gray-700 font-medium">Due date:(optionatl)</label>
+          <label className="block mb-4 text-gray-200 font-medium">
+            Task Type:
+            <select value={taskType} onChange={(e) => setTaskType(e.target.value)} className="w-full p-2 rounded text-black">
+              <option value="remote">Remote</option>
+              <option value="physical">Physical</option>
+            </select>
+          </label>
+
+          {taskType === "physical" && (
+          <label className="block mb-4 text-gray-200 font-medium">
+            Location Details:
+               <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} className="w-full p-2 rounded text-black" required />
+          </label>
+          )}
+
+
+           <label htmlFor="duedate" className="block text-gray-200 font-medium">Due date:(optionatl)</label>
           <input
             type="date"
             id='duedate'
@@ -115,8 +141,6 @@ const AddTask: React.FC = () => {
             onChange={(e) => setDuedate(e.target.value)}
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-
-          
 
           <button
             onClick={addTask}

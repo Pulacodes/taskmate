@@ -8,6 +8,7 @@ interface Task {
   _id: string;
   title: string;
   content: string;
+  taskType: string;
   price: string;
   status: string;
   createdAt: string;
@@ -64,7 +65,7 @@ const TaskList: React.FC = () => {
       const filtered = tasks.filter((task) => task.status === 'available');
       setFilteredTasks(filtered);
     } else {
-      const filtered = tasks.filter((task) => task.category === selectedCategory);
+      const filtered = tasks.filter((task) => task.category === selectedCategory && task.status === 'available');
       setFilteredTasks(filtered);
     }
   }, [selectedCategory, tasks]);
@@ -151,6 +152,9 @@ const TaskList: React.FC = () => {
               <div className="p-4">
                 <h3 className="text-lg text-blue-600 font-bold mb-2">{task.title}</h3>
                 <p className="text-gray-400 mb-4">{task.content}</p>
+                <div className="flex p-2 items-center border-b border-transparent">
+                <Image src={"/location.svg"} className="w-4 h-4 mr-3" width={15} height={15} alt='location' />
+                <span className='text-gray-400 mb-2'>{task.taskType}</span></div>
                 <p className="text-lg font-bold text-white mb-2">TL {task.price}</p>
                 <p className="text-sm text-gray-400">
                   Created At: {new Date(task.createdAt).toLocaleString()}

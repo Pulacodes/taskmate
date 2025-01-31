@@ -24,6 +24,7 @@ export default function RootLayout({
             {/* Main Content */}
             <main className="p-0">
             <Providers>
+            
           {children}
           </Providers>
               
