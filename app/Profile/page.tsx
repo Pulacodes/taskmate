@@ -5,11 +5,13 @@ import { useState, useEffect } from "react";
 import ReviewsCarousel from '@/components/Review/page';
 import Review from "@/components/Review/Averagerating/page"
 import { useUser } from "@clerk/nextjs";
-import Lottie from "lottie-react";
+import dynamic from 'next/dynamic';
 import loadingAnimation from "@/public/Animation.json";
 
-
-
+const Lottie = dynamic(
+  () => import('lottie-react'),
+  { ssr: false }
+);
 
 export default function ProfilePage() {
  const { user } = useUser();
@@ -17,6 +19,7 @@ export default function ProfilePage() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null); // Added to handle errors
+
 
   useEffect(() => {
     if (!email) return;
