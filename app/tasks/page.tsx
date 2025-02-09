@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Lottie from "lottie-react";
+import dynamic from 'next/dynamic';
 import loadingAnimation from "@/public/Animation.json";
 import {
   Select,
@@ -12,7 +12,10 @@ import {
 } from "@/components/ui/select";
 import { useRouter } from 'next/navigation';
 
-
+const Lottie = dynamic(
+  () => import('lottie-react'),
+  { ssr: false }
+);
 const AddTask: React.FC = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
