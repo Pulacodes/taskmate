@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface Task {
   _id: string;
@@ -119,7 +120,15 @@ const TaskList: React.FC = () => {
             </option>
           ))}
         </select>
+        <Link
+      href="/tasks"
+      className="flex items-end mb-5 gap-2 rounded-sm bg-primary px-6 py-3 text-base w-40 font-semibold text-white duration-300 ease-in-out hover:bg-blue-600/80"
+    >
+      Add Task
+      <Image src="/plus.svg" width={20} height={20} alt="add" />
+    </Link>
       </div>
+      
 
       {/* Task Cards */}
       {filteredTasks.length === 0 ? (
@@ -151,7 +160,7 @@ const TaskList: React.FC = () => {
               {/* Task Content */}
               <div className="p-4">
                 <h3 className="text-lg text-blue-600 font-bold mb-2">{task.title}</h3>
-                <p className="text-gray-400 mb-4">{task.content}</p>
+                <p className="text-gray-400 mb-4">{task.category}</p>
                 <div className="flex p-2 items-center border-b border-transparent">
                 <Image src={"/location.svg"} className="w-4 h-4 mr-3" width={15} height={15} alt='location' />
                 <span className='text-gray-400 mb-2'>{task.taskType}</span></div>

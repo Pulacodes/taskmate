@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '../../../lib/mongodb';
 import { getAuth } from "@clerk/nextjs/server";
+import { writeFile } from 'fs/promises';
+import path from 'path';
+import { mkdir } from 'fs';
 
 export async function POST(req) {
   const client = await clientPromise;
@@ -10,7 +13,6 @@ export async function POST(req) {
   try {
     // Get the logged-in user's ID
     const { userId } = getAuth(req);
-
     if (!userId) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
@@ -18,7 +20,7 @@ export async function POST(req) {
     // Fetch user details from Clerk
     const userResponse = await fetch(`https://api.clerk.dev/v1/users/${userId}`, {
       headers: {
-        Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`, // Use Clerk Secret Key
+        Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`,
       },
     });
 
@@ -28,10 +30,38 @@ export async function POST(req) {
 
     const user = await userResponse.json();
 
-    // Parse request body
-    const { title, content, price, status, category,location,taskType, duedate } = await req.json();
+    // Parse form data
+    const formData = await req.formData();
+    const title = formData.get("title");
+    const content = formData.get("content");
+    const price = formData.get("price");
+    const status = formData.get("status") || "Available";
+    const category = formData.get("category");
+    const location = formData.get("location");
+    const taskType = formData.get("taskType");
+    const duedate = formData.get("duedate");
+
     if (!title || !content || !price || !category) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
+    }
+
+    // Handle file uploads
+    const files = formData.getAll("files"); // Get all uploaded files
+    const fileUrls = [];
+
+    if (files.length > 0) {
+      const uploadDir = path.join(process.cwd(), "public/uploads");
+      
+      // Ensure the upload directory exists
+      await new Promise((resolve) => mkdir(uploadDir, { recursive: true }, resolve));
+
+      for (const file of files) {
+        if (file.name && file.size > 0) {
+          const filePath = path.join(uploadDir, file.name);
+          await writeFile(filePath, Buffer.from(await file.arrayBuffer()));
+          fileUrls.push(`/uploads/${file.name}`);
+        }
+      }
     }
 
     // Prepare new task object
@@ -40,14 +70,13 @@ export async function POST(req) {
       content,
       category,
       price: parseFloat(price),
-      status: status || 'Available',
-      requirements: null,
+      status,
       location,
-      paymentMethod: null,
       taskType,
       duedate,
-      AssignedTo:null,
+      AssignedTo: null,
       createdAt: new Date(),
+      files: fileUrls, // Store file URLs in DB
       user: {
         username: user.username || `${user.first_name} ${user.last_name}`,
         email: user.email_addresses?.[0]?.email_address,

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function ReviewForm({ userId }) {
+export default function ReviewForm({ userId, username }) {
   const [reviewerId, setReviewerId] = useState("");
   const [rating, setRating] = useState(1);
   const [comment, setComment] = useState("");
@@ -48,7 +48,7 @@ export default function ReviewForm({ userId }) {
 
   return (
     <div className="max-w-lg mx-auto p-6 backdrop-blur bg-opacity-10 backdrop-saturate-100 backdrop-contrast-100 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4 text-gray-100">Leave a Review</h2>
+      <h2 className="text-2xl font-bold mb-4 text-gray-100">How was your experience working with {username}</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Reviewer ID Input */}
         <div>

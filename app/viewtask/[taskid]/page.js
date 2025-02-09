@@ -3,8 +3,11 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useUser } from "@clerk/nextjs";
+import Review from "@/components/Review/Averagerating/page"
 import TaskCompletion from "../../../components/TaskCompletion/TaskCompletion"; 
 import ReviewForm from '../../../components/reviewform';
+import Lottie from "lottie-react";
+import loadingAnimation from "@/public/Animation.json";
 import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -22,6 +25,7 @@ export default function TaskDetailsPage() {
   const [offers, setOffers] = useState([]);
   const [showOfferBox, setShowOfferBox] = useState(false);
   const [offerText, setOfferText] = useState('');
+  const [loading, setLoading] = useState(true);
   const [editingOffer, setEditingOffer] = useState(false);
   const [existingOffer, setExistingOffer] = useState(null);
   
@@ -47,13 +51,18 @@ export default function TaskDetailsPage() {
       } catch (err) {
         setError(err.message);
       }
+      finally {
+        setLoading(false); // Ensure loading state is updated
+      }
     };
    
     fetchTask();
      
     
   }, [taskid, user,task?.createdBy]);
-  
+  if (loading) return <div className="flex items-center justify-center h-screen bg-gray-900">
+  <Lottie animationData={loadingAnimation} loop={true} className="w-52 h-52" />
+</div>;
   const handleSubmitOffer = async () => {
     if (offerText.trim() === '') {
       alert('Please write a description for your offer.');
@@ -150,6 +159,7 @@ export default function TaskDetailsPage() {
                     />
                     </Link>
                   </div>
+                  
                 </div>
           
                 <h3 className="text-center mb-1.5 text-2xl font-semibold text-white dark:text-white">
@@ -158,6 +168,37 @@ export default function TaskDetailsPage() {
                   
                     
           <h1 className="text-3xl text-center font-bold text-gray-200 mb-4">{task.title}</h1>
+          <div className="flex relative px-4 pb-6 mx-auto space-x-2">
+  {task.files?.map((file, index) => {
+    const isImage = /\.(jpg|jpeg|png|gif|bmp|svg|webp)$/i.test(file); // Check if it's an image
+
+    return isImage ? (
+      <Image
+        key={index}
+        src={file}
+        width={150}
+        height={150}
+        alt="Task image"
+        className="rounded-lg object-cover"
+      />
+    ) : (
+      <div
+        key={index}
+        className="flex items-center space-x-2 bg-gray-800 text-white p-2 rounded-lg"
+      >
+        <span className="truncate max-w-[100px]">{file.split('/').pop()}</span>
+        <a
+          href={file}
+          download
+          className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+        >
+          Download
+        </a>
+      </div>
+    );
+  })}
+</div>
+
           <p className=" text-center text-gray-400 mb-4">{task.content}</p>
           
 
@@ -228,7 +269,7 @@ export default function TaskDetailsPage() {
                 <li key={index} className="bg-gray-800 bg-opacity-65 p-4 rounded-lg shadow-md">
                   <Link href={`/Profile/${offer.userId}`}>
           
-                  <div className="flex items-center p-4 border-b border-white">
+                  <div className="flex items-center p-4 border-b border-transparent">
                  
                   <Image
                       src={offer.avatar || '/default-avatar.svg'} // Use user avatar or a default one
@@ -237,12 +278,13 @@ export default function TaskDetailsPage() {
                       alt={`${offer.userId}'s profile avatar`}
                       className='rounded-full mr-5'
                     />
-                    <p className="text-bolf text-gray-200 font-semibold">{offer.name}</p>
+                    <p className="text-bold text-gray-200 mr-5 font-semibold">{offer.name}</p>
+                    <p><Review userId={offer.userId}/></p>
                   </div>
                 
                   </Link>
                   <br/>
-                  <p className="text-gray-400 font-bold text-center">Bid: TL{offer.amount}</p>
+                  <p className="text-gray-400 font-bold text-2xl text-center">Bid: TL{offer.amount}</p>
                   <p className="text-gray-200 text-center">{offer.message}</p>
                   
             {isTaskOwner &&  (
@@ -259,7 +301,39 @@ export default function TaskDetailsPage() {
           )}
           </div>
 
-          ) : task.status === 'complete' ? ( <ReviewForm userId={task.user.email}/>): (<TaskCompletion 
+          ) : task.status === 'complete' && !isTaskOwner ? ( <ReviewForm userId={task.user.email} username={task.user.username}/>): 
+           task.status === 'complete' && isTaskOwner ? (   
+           <><div className="flex relative px-4 pb-6 mx-auto space-x-2">
+              {task.image?.map((file, index) => {
+                const isImage = /\.(jpg|jpeg|png|gif|bmp|svg|webp)$/i.test(file); // Check if it's an image
+
+                return isImage ? (
+                  <Image
+                    key={index}
+                    src={file}
+                    width={150}
+                    height={150}
+                    alt="Task image"
+                    className="rounded-lg object-cover" />
+                ) : (
+                  <div
+                    key={index}
+                    className="flex items-center space-x-2 bg-gray-800 text-white p-2 rounded-lg"
+                  >
+                    <span className="truncate max-w-[100px]">{file.split('/').pop()}</span>
+                    <a
+                      href={file}
+                      download
+                      className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                    >
+                      Download
+                    </a>
+                  </div>
+                );
+              })}
+            </div><ReviewForm userId={task.offers.userId} username={task.offers[0].name} /></>): isTaskOwner ?
+            ( <p className="text-gray-400 font-bold text-2xl text-center">Task in progress... </p> ):
+            (<TaskCompletion 
             taskId={task._id} 
             initialRequirements={task.requirements} 
             initialStatus={task.status}

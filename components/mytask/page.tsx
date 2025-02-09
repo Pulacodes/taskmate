@@ -7,7 +7,7 @@ import { useUser } from '@clerk/nextjs';
 interface Task {
   _id: string;
   title: string;
-  content: string;
+  category: string;
   price: string;
   status: string;
   createdAt: string;
@@ -95,7 +95,7 @@ const TaskList: React.FC = () => {
           } text-white`}
           onClick={() => setSelectedFilter('all')}
         >
-          All
+          All tasks
         </button>
         <button
           className={`px-4 py-2 rounded-md ${
@@ -103,7 +103,7 @@ const TaskList: React.FC = () => {
           } text-white`}
           onClick={() => setSelectedFilter('assigned')}
         >
-          Assigned to Me
+          Assigned
         </button>
         <button
           className={`px-4 py-2 rounded-md ${
@@ -124,7 +124,7 @@ const TaskList: React.FC = () => {
             <div
               key={task._id}
               onClick={() => handleCardClick(task._id)}
-              className="relative bg-black bg-opacity-80 shadow-md rounded-md cursor-pointer hover:bg-gray-700 transition-colors"
+              className="relative bg-black max-h-60 bg-opacity-80 shadow-md rounded-md cursor-pointer hover:bg-gray-700 transition-colors"
             >
               {/* User Info */}
               {task.user && (
@@ -145,7 +145,7 @@ const TaskList: React.FC = () => {
               {/* Task Content */}
               <div className="p-4">
                 <h3 className="text-lg text-indigo-700 font-bold mb-2">{task.title}</h3>
-                <p className="text-gray-400 mb-4">{task.content}</p>
+                <p className="text-gray-400 mb-4">{task.category}</p>
                 <p className="text-lg font-bold text-white mb-2">TL {task.price}</p>
                 <p className="text-sm text-gray-400">
                   Created At: {new Date(task.createdAt).toLocaleString()}
@@ -153,8 +153,8 @@ const TaskList: React.FC = () => {
               </div>
 
               {/* Status Dot */}
-              <div className="absolute bottom-4 right-4">
-                <Image src={getStatusDot(task.status)} width={30} height={30} alt={task.status} className="w-4 h-4" />
+              <div className="absolute text-gray-400 bottom-4 right-4">
+                {task.status}<Image src={getStatusDot(task.status)} width={30} height={30} alt={task.status} className="w-4 h-4" />
               </div>
             </div>
           ))}

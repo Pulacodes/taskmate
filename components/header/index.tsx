@@ -162,7 +162,7 @@ const Header = () => {
       </SignedIn>
       <SignedOut>
         {/* Signed out users get sign in button */}
-        <div className='tex-white bg-white border-lg '><SignInButton /></div>
+        <div className='flex items-end mb-5 gap-2 rounded-sm bg-gray-600 px-6 py-3 text-base font-semibold text-white duration-300 ease-in-out hover:bg-blue-600/80'><SignInButton /></div>
         
       </SignedOut>
         </div>

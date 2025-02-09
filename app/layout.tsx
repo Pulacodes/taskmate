@@ -6,12 +6,17 @@ import { ClerkProvider } from '@clerk/nextjs'
 import Footer from '@/components/ui/footer';
 import Header from '@/components/header';
 import { Providers } from './providers';
+import { requestPermission } from "@/lib/requestPermission";
+import { useEffect } from 'react';
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  useEffect(() => {
+    requestPermission();
+  }, []);
   return (
     <html lang="en">
       <body>

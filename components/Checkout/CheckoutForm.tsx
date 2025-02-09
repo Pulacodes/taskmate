@@ -9,7 +9,7 @@ export default function CheckoutForm() {
   const router = useRouter();
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [address, setAddress] = useState("");
-  const [requirements, setRequirements] = useState("");
+  const [requirements, setRequirements] = useState<string[]>([]);
   const [taskType, setTaskType] = useState("digital");
   const [location, setLocation] = useState("");
 
@@ -45,7 +45,7 @@ export default function CheckoutForm() {
           email,
           paymentMethod,
           address,
-          requirements,
+          requirements, // Now sending as an array
           taskType,
           location,
         }),
@@ -66,6 +66,16 @@ export default function CheckoutForm() {
       console.error("Error assigning task:", error);
       alert(`Error assigning task`);
     }
+  };
+
+  const handleRequirementsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const inputValue = e.target.value;
+    // Split by new lines and filter out empty strings
+    const requirementsArray = inputValue
+      .split("\n")
+      .map(line => line.trim())
+      .filter(line => line.length > 0);
+    setRequirements(requirementsArray);
   };
 
   return (
@@ -89,8 +99,14 @@ export default function CheckoutForm() {
       )}
 
       <label className="block mb-4">
-        Task Completion Requirements:
-        <textarea value={requirements} onChange={(e) => setRequirements(e.target.value)} className="w-full p-2 rounded text-black" required></textarea>
+        Task Completion Requirements (one per line):
+        <textarea 
+          value={requirements.join("\n")} // Join array for display
+          onChange={handleRequirementsChange}
+          className="w-full p-2 rounded text-black"
+          required
+          placeholder="Enter each requirement on a new line"
+        ></textarea>
       </label>
 
       <label className="block mb-4">

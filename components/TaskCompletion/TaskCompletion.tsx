@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface TaskCompletionProps {
   taskId: string;
@@ -9,11 +11,11 @@ interface TaskCompletionProps {
   price: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const TaskCompletion: React.FC<TaskCompletionProps> = ({ taskId, initialRequirements, initialStatus, price }) => {
+const TaskCompletion: React.FC<TaskCompletionProps> = ({ taskId, initialRequirements, price }) => {
   const [requirements, setRequirements] = useState<{ text: string; checked: boolean }[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [files, setFiles] = useState<File[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const router = useRouter();
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
@@ -31,10 +33,15 @@ const TaskCompletion: React.FC<TaskCompletionProps> = ({ taskId, initialRequirem
     setIsComplete(allChecked);
   };
 
-  // Handle file uploads
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFiles(Array.from(e.target.files));
+  // Handle file uploads and previews
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      const selectedFiles = Array.from(event.target.files);
+      setFiles(selectedFiles);
+
+      // Generate previews for images
+      const urls = selectedFiles.map(file => URL.createObjectURL(file));
+      setPreviewUrls(urls);
     }
   };
 
@@ -43,16 +50,24 @@ const TaskCompletion: React.FC<TaskCompletionProps> = ({ taskId, initialRequirem
     if (!isComplete) return;
 
     try {
+      const formData = new FormData();
+      formData.append("taskId", taskId);
+
+      // Append all selected files
+      files.forEach((file) => {
+        formData.append("image", file);
+      });
+
       const response = await fetch(`/api/tasks/complete`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ taskId }),
+        body: formData, // Sending FormData
       });
 
       const data = await response.json();
       if (response.ok) {
         alert("Task marked as complete!");
         setIsComplete(false);
+        router.refresh();
       } else {
         alert("Failed to mark task as complete: " + data.error);
       }
@@ -89,6 +104,15 @@ const TaskCompletion: React.FC<TaskCompletionProps> = ({ taskId, initialRequirem
         <label className="block mb-2">Upload Proof of Completion:</label>
         <input type="file" multiple onChange={handleFileChange} className="bg-gray-800 text-white p-2 rounded w-full" />
       </div>
+
+      {/* File Previews */}
+      {previewUrls.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {previewUrls.map((url, index) => (
+            <Image width={60} height={60} key={index} src={url} alt="Preview" className="w-20 h-20 object-cover rounded-md" />
+          ))}
+        </div>
+      )}
 
       <button
         className={`w-full p-3 rounded font-bold ${isComplete ? "bg-green-500 hover:bg-green-600" : "bg-gray-700 cursor-not-allowed"}`}

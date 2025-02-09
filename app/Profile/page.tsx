@@ -1,9 +1,13 @@
 'use client';
-
+import { SignedIn, SignedOut } from '@clerk/nextjs'
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import ReviewsCarousel from '@/components/Review/page';
+import Review from "@/components/Review/Averagerating/page"
 import { useUser } from "@clerk/nextjs";
+import Lottie from "lottie-react";
+import loadingAnimation from "@/public/Animation.json";
+
 
 
 
@@ -40,7 +44,9 @@ export default function ProfilePage() {
     fetchData();
   }, [email]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <div className="flex items-center justify-center h-screen bg-gray-900">
+  <Lottie animationData={loadingAnimation} loop={true} className="w-52 h-52" />
+</div>;
   if (error) return <p>Error: {error}</p>;
   if (!userData) return <p>User not found.</p>;
 
@@ -49,8 +55,8 @@ export default function ProfilePage() {
 
   return (
     <div className="mx-auto min-h-screen ">
-
-      {/* Profile Banner */}
+      <SignedIn>
+        {/* Profile Banner */}
       <div className="relative z-20 h-35 md:h-65">
         <Image
           src={bannerUrl || '/default-banner.jpg'} // Use user banner or a default one
@@ -75,7 +81,8 @@ export default function ProfilePage() {
       </div>
 
       <h3 className="text-center mb-1.5 text-2xl font-semibold text-black dark:text-white">
-        {username}
+        {username}<Review userId={email}/>
+        
       </h3>
 
       {/* User Stats */}
@@ -115,6 +122,13 @@ export default function ProfilePage() {
         <h2 className="text-xl text-center font-semibold">Reviews</h2>
         <ReviewsCarousel userId={email} />
       </div>
+
+      </SignedIn>
+      <SignedOut>
+       <p className='text-gray-800'> Please Sign in to access any in app features</p>
+      </SignedOut>
+
+      
     </div>
   );
 }
