@@ -2,16 +2,18 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { useUser } from "@clerk/nextjs";
 import Review from "@/components/Review/Averagerating/page"
+import dynamic from 'next/dynamic';
 import TaskCompletion from "../../../components/TaskCompletion/TaskCompletion"; 
 import ReviewForm from '../../../components/reviewform';
-import Lottie from "lottie-react";
 import loadingAnimation from "@/public/Animation.json";
-import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
+import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
-
+const Lottie = dynamic(
+  () => import('lottie-react'),
+  { ssr: false }
+);
 
 export default function TaskDetailsPage() {
   const { user } = useUser();
