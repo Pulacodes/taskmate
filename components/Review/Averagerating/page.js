@@ -38,20 +38,20 @@ export default function Reviews({ userId }) {
       .then((data) => setReviews(data))
       .catch((err) => console.error('Error fetching reviews:', err));
   }, [userId]);
+let averageRating;
 
   if (reviews.length === 0) {
-    return <p>No reviews yet.</p>;
+    averageRating = 0;
   }
-
   // Calculate average rating
-  const averageRating = 
+   averageRating = 
     reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
 
   return (
       <div className="mb-4">
-        <div className="flex items-center gap-2">
-          <StarRating rating={Math.round(averageRating)} />
-          <span className="text-gray-600">
+        <div className="flex text-center px-auto items-center gap-2">
+          Rating: <StarRating rating={Math.round(averageRating)} />
+          <span className="text-center text-gray-600">
             {averageRating.toFixed(1)}/5
           </span>
         </div>

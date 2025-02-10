@@ -305,36 +305,8 @@ export default function TaskDetailsPage() {
 
           ) : task.status === 'complete' && !isTaskOwner ? ( <ReviewForm userId={task.user.email} username={task.user.username}/>): 
            task.status === 'complete' && isTaskOwner ? (   
-           <><div className="flex relative px-4 pb-6 mx-auto space-x-2">
-              {task.image && (
-  (() => {
-    const file = task.image;
-    const isImage = /\.(jpg|jpeg|png|gif|bmp|svg|webp)$/i.test(file); // Check if it's an image
-
-    return isImage ? (
-      <Image
-        src={file}
-        width={150}
-        height={150}
-        alt="Task image"
-        className="rounded-lg object-cover"
-      />
-    ) : (
-      <div className="flex items-center space-x-2 bg-gray-800 text-white p-2 rounded-lg">
-        <span className="truncate max-w-[100px]">{file.split('/').pop()}</span>
-        <a
-          href={file}
-          download
-          className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-        >
-          Download
-        </a>
-      </div>
-    );
-  })()
-)}
-
-            </div><ReviewForm userId={task.offers.userId} username={task.offers[0].name} /></>): isTaskOwner ?
+           
+            <ReviewForm userId={task.offers.userId} username={task.offers[0].name} />): isTaskOwner ?
             ( <p className="text-gray-400 font-bold text-2xl text-center">Task in progress... </p> ):
             (<TaskCompletion 
             taskId={task._id} 
