@@ -1,11 +1,10 @@
 'use client';
-
-import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Review from "@/components/Review/Averagerating/page"
 import dynamic from 'next/dynamic';
 import TaskCompletion from "../../../components/TaskCompletion/TaskCompletion"; 
 import ReviewForm from '../../../components/reviewform';
+import { useEffect, useState } from 'react';
 import loadingAnimation from "@/public/Animation.json";
 import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/nextjs';
 import Image from 'next/image';
@@ -37,7 +36,7 @@ export default function TaskDetailsPage() {
       setError('Task ID is missing.');
       return;
     }
-    
+  
     const fetchTask = async () => {
       try {
         const res = await fetch(`/api/tasks/viewtask/${taskid}`);
@@ -48,20 +47,22 @@ export default function TaskDetailsPage() {
         const data = await res.json();
         setTask(data);
         setOffers(data.offers || []);
-        const userOffer = data.offers?.find((offer) => offer.userId === user?.emailAddresses[0]?.emailAddress);
-        if (userOffer) setExistingOffer(userOffer);
+  
+        // Check user only after data is set
+        if (user) {
+          const userOffer = data.offers?.find((offer) => offer.userId === user?.emailAddresses[0]?.emailAddress);
+          if (userOffer) setExistingOffer(userOffer);
+        }
       } catch (err) {
         setError(err.message);
-      }
-      finally {
-        setLoading(false); // Ensure loading state is updated
+      } finally {
+        setLoading(false);
       }
     };
-   
+  
     fetchTask();
-     
-    
-  }, [taskid, user,task?.createdBy]);
+  }, [taskid, user]);
+  
   if (loading) return <div className="flex items-center justify-center h-screen bg-gray-900">
   <Lottie animationData={loadingAnimation} loop={true} className="w-52 h-52" />
 </div>;
@@ -133,7 +134,7 @@ export default function TaskDetailsPage() {
     router.push(`/checkout?price=${taskPrice}&user=${encodeURIComponent(assignedUser)}&taskId=${taskid}&email=${assignedemail}`);
   };
   
-  const isTaskOwner = user?.emailAddresses[0]?.emailAddress === task?.user.email;
+  const isTaskOwner = user?.emailAddresses[0]?.emailAddress === task?.user?.email;
   
 
   const statusColor =
@@ -171,7 +172,7 @@ export default function TaskDetailsPage() {
                     
           <h1 className="text-3xl text-center font-bold text-gray-200 mb-4">{task.title}</h1>
           <div className="flex relative px-4 pb-6 mx-auto space-x-2">
-  {task.files?.map((file, index) => {
+  {task.files?.length > 0 && task.files.map((file, index) =>  {
     const isImage = /\.(jpg|jpeg|png|gif|bmp|svg|webp)$/i.test(file); // Check if it's an image
 
     return isImage ? (
@@ -305,8 +306,25 @@ export default function TaskDetailsPage() {
 
           ) : task.status === 'complete' && !isTaskOwner ? ( <ReviewForm userId={task.user.email} username={task.user.username}/>): 
            task.status === 'complete' && isTaskOwner ? (   
-           
-            <ReviewForm userId={task.offers.userId} username={task.offers[0].name} />): isTaskOwner ?
+           <div><div className="flex relative px-4 pb-6 mx-auto space-x-2">
+              {task.image && ((() => {
+                 const file = task.image;
+                 const isImage = /\.(jpg|jpeg|png|gif|bmp|svg|webp)$/i.test(file); // Check if it's an image
+                 return isImage ? (
+                  <Image src={file} width={150} height={150} alt="Task image" className="rounded-lg object-cover"/>) : (
+                     <div className="flex items-center space-x-2 bg-gray-800 text-white p-2 rounded-lg">
+                      <span className="truncate max-w-[100px]">{file.split('/').pop()}</span>
+                      <a href={file} download className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition" >
+                         Download
+                         </a>
+                         </div>
+                         );
+                        })()
+                        )}
+                        </div>
+                        <ReviewForm userId={task.offers?.[0]?.userId} username={task.offers?.[0]?.name} />
+                        </div>): 
+            isTaskOwner ?
             ( <p className="text-gray-400 font-bold text-2xl text-center">Task in progress... </p> ):
             (<TaskCompletion 
             taskId={task._id} 
