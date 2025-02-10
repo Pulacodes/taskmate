@@ -1,17 +1,31 @@
-import { NextResponse } from 'next/server';
-import clientPromise from '../../../lib/mongodb';
+import { NextResponse } from "next/server";
+import clientPromise from "../../../lib/mongodb";
 import { getAuth } from "@clerk/nextjs/server";
-import { writeFile } from 'fs/promises';
-import path from 'path';
-import { mkdir } from 'fs';
+import { writeFile } from "fs/promises";
+import path from "path";
+import { mkdir } from "fs";
+import admin from "firebase-admin";
+
+// ✅ Fix Firebase Admin SDK Initialization
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY
+        ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n")
+        : undefined,
+    }),
+  });
+}
 
 export async function POST(req) {
   const client = await clientPromise;
-  const db = client.db('taskme');
-  const collection = db.collection('tasks');
+  const db = client.db("taskme");
+  const collection = db.collection("tasks");
 
   try {
-    // Get the logged-in user's ID
+    // Get userId from Clerk
     const { userId } = getAuth(req);
     if (!userId) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -64,7 +78,7 @@ export async function POST(req) {
       }
     }
 
-    // Prepare new task object
+    // Prepare task object
     const newTask = {
       title,
       content,
@@ -84,18 +98,37 @@ export async function POST(req) {
       },
     };
 
-    // Insert task into database
+    // Insert task
     const result = await collection.insertOne(newTask);
     if (!result.acknowledged) {
       throw new Error("Failed to insert task");
     }
 
-    // Return the newly created task
-    const insertedTask = {
-      ...newTask,
-      _id: result.insertedId,
-    };
-    return NextResponse.json(insertedTask, { status: 201 });
+    // ✅ Fetch users with valid fcmToken
+    const usersWithTokens = await db.collection("users").find({
+      fcmToken: { $exists: true, $ne: null },
+    }).toArray();
+
+    const tokens = usersWithTokens.map((u) => u.fcmToken).filter(Boolean);
+
+    if (tokens.length > 0) {
+      try {
+        // ✅ Send FCM notification
+        const response = await admin.messaging().sendMulticast({
+          tokens,
+          notification: {
+            title: "New Task Available!",
+            body: `A new task "${title}" has been posted. Check it out!`,
+          },
+        });
+
+        console.log("FCM Response:", response);
+      } catch (firebaseError) {
+        console.error("FCM Error:", firebaseError);
+      }
+    }
+
+    return NextResponse.json({ message: "Task added and notification sent!" }, { status: 201 });
 
   } catch (error) {
     console.error("Error inserting task:", error);
