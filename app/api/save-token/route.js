@@ -1,8 +1,11 @@
 import clientPromise  from "../../../lib/mongodb";
+import { getAuth } from "@clerk/nextjs/server";
+
 
 export async function POST(req) {
   try {
-    const { userId, token } = await req.json();
+    const { userId } = getAuth(req);
+    const { token } = await req.json();
 
     if (!userId || !token) {
       return Response.json({ error: "Missing userId or token" }, { status: 400 });
