@@ -1,18 +1,13 @@
 'use client';
 import { useParams, useRouter } from 'next/navigation';
 import Review from "@/components/Review/Averagerating/page"
-import dynamic from 'next/dynamic';
 import TaskCompletion from "../../../components/TaskCompletion/TaskCompletion"; 
 import ReviewForm from '../../../components/reviewform';
 import { useEffect, useState } from 'react';
-import loadingAnimation from "@/public/Animation.json";
 import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
-const Lottie = dynamic(
-  () => import('lottie-react'),
-  { ssr: false }
-);
+
 
 export default function TaskDetailsPage() {
   const { user } = useUser();
@@ -63,8 +58,8 @@ export default function TaskDetailsPage() {
     fetchTask();
   }, [taskid, user]);
   
-  if (loading) return <div className="flex items-center justify-center h-screen bg-gray-900">
-  <Lottie animationData={loadingAnimation} loop={true} className="w-52 h-52" />
+  if (loading) return <div className="flex items-center justify-center text-white h-screen bg-gray-900">
+    <p>Loading</p>
 </div>;
   const handleSubmitOffer = async () => {
     if (offerText.trim() === '') {
