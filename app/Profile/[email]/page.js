@@ -45,7 +45,7 @@ export default function ProfilePage() {
   if (!userData) return <p>User not found.</p>;
 
   // Destructure user data
-  const { bannerUrl, avatarUrl, username, aboutMe, tasks, assignedTasks, completedTasks } = userData;
+  const { bannerUrl, avatarUrl, username, aboutMe, tasks, assignedTasks, completedTasks, portfolioImages } = userData;
 
   return (
     <div className="mx-auto min-h-screen ">
@@ -76,6 +76,10 @@ export default function ProfilePage() {
 
       <h3 className="text-center mb-1.5 text-2xl font-semibold text-black dark:text-white">
         {username}
+      </h3>
+      <h3 className="text-center mb-1.5 text-2xl font-semibold text-black dark:text-white">
+        {userData.profession}
+        
       </h3>
       <div className="flex items-center justify-center">
         <h3 className="text-center mx-auto mb-5 mt-4.5 text-2xl font-semibold text-black dark:text-white">
@@ -113,6 +117,40 @@ export default function ProfilePage() {
         <p className="mt-4.5 mb-15">
           {aboutMe || 'This user has not shared any information about themselves.'}
         </p>
+      </div>
+      <div className="flex relative px-4 pb-6 mx-auto space-x-2">
+            <h4 className="font-semibold text-black dark:text-white">
+              
+                PORTFOLIO:
+              </h4><br/>
+        {portfolioImages?.length > 0 && portfolioImages.map((file, index) =>  {
+          const isImage = /\.(jpg|jpeg|png|gif|bmp|svg|webp)$/i.test(file); // Check if it's an image
+      
+          return isImage ? (
+            <Image
+              key={index}
+              src={file}
+              width={150}
+              height={150}
+              alt="Task image"
+              className="rounded-lg object-cover"
+            />
+          ) : (
+            <div
+              key={index}
+              className="flex items-center space-x-2 bg-gray-800 text-white p-2 rounded-lg"
+            >
+              <span className="truncate max-w-[100px]">{file.split('/').pop()}</span>
+              <a
+                href={file}
+                download
+                className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+              >
+                Download
+              </a>
+            </div>
+          );
+        })}
       </div>
 
       {/* Reviews */}
