@@ -124,7 +124,7 @@ const TaskList: React.FC = () => {
             <div
               key={task._id}
               onClick={() => handleCardClick(task._id)}
-              className="relative bg-black max-h-60 bg-opacity-80 shadow-md rounded-md cursor-pointer hover:bg-gray-700 transition-colors"
+              className="relative bg-black bg-opacity-80 shadow-md rounded-md cursor-pointer hover:bg-gray-700 transition-colors"
             >
               {/* User Info */}
               {task.user && (

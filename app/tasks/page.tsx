@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import dynamic from 'next/dynamic';
-import loadingAnimation from "@/public/Animation.json";
 import {
   Select,
   SelectContent,
@@ -12,10 +10,7 @@ import {
 } from "@/components/ui/select";
 import { useRouter } from 'next/navigation';
 
-const Lottie = dynamic(
-  () => import('lottie-react'),
-  { ssr: false }
-);
+
 const AddTask: React.FC = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -80,8 +75,8 @@ const AddTask: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-900">
-        <Lottie animationData={loadingAnimation} loop className="w-52 h-52" />
+      <div className="flex text-white text-center items-center justify-center h-screen bg-gray-900">
+        <p>Loading...</p>
       </div>
     );
   }
