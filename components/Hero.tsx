@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { FaGraduationCap, FaLaptopCode, FaMoneyBillWave, FaTasks } from "react-icons/fa";
+import { IconType } from "react-icons";
 
 const HeroSection = () => {
   const [taskCount, setTaskCount] = useState(150);
@@ -14,7 +15,12 @@ const HeroSection = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const FloatingIcon = ({ icon: Icon, delay }) => (
+  interface FloatingIconProps {
+    icon: IconType;
+    delay: string;
+  }
+
+  const FloatingIcon = ({ icon: Icon, delay }: FloatingIconProps) => (
     <div
       className={`absolute transform transition-all duration-1000 ease-in-out ${isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}
       style={{ transitionDelay: delay }}
