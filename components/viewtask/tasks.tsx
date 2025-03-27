@@ -43,7 +43,7 @@ const TaskList: React.FC = () => {
         task.status.toLowerCase() === 'available'
       );
       setTasks(availableTasks);
-      setCategories([...new Set(availableTasks.map(task => task.category))]);
+      setCategories(Array.from(new Set(availableTasks.map(task => task.category))));
     } catch (error) {
       console.error('Error fetching tasks:', error);
     }
