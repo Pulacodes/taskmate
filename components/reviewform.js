@@ -3,6 +3,7 @@ import { useState } from "react";
 export default function ReviewForm({ userId, username }) {
   const [reviewerId, setReviewerId] = useState("");
   const [rating, setRating] = useState(1);
+  const [rated, setrated] = useState(false);
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -36,6 +37,7 @@ export default function ReviewForm({ userId, username }) {
       }
 
       setSuccess("Review submitted successfully!");
+      setrated(true);
       setReviewerId("");
       setRating(1);
       setComment("");
@@ -48,8 +50,7 @@ export default function ReviewForm({ userId, username }) {
 
   return (
     <div className="max-w-lg mx-auto p-6 backdrop-blur bg-opacity-10 backdrop-saturate-100 backdrop-contrast-100 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4 text-gray-100">How was your experience working with {username}</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      {!rated? (<><h2 className="text-2xl font-bold mb-4 text-gray-100">How was your experience working with {username}</h2><form onSubmit={handleSubmit} className="space-y-4">
         {/* Reviewer ID Input */}
         <div>
           <label htmlFor="reviewerId" className="block text-sm font-medium text-gray-200">
@@ -62,8 +63,7 @@ export default function ReviewForm({ userId, username }) {
             onChange={(e) => setReviewerId(e.target.value)}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter your email"
-            required
-          />
+            required />
         </div>
 
         {/* Rating Input */}
@@ -98,8 +98,7 @@ export default function ReviewForm({ userId, username }) {
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows="4"
             placeholder="Write your review here..."
-            required
-          />
+            required />
         </div>
 
         {/* Submit Button */}
@@ -124,7 +123,7 @@ export default function ReviewForm({ userId, username }) {
             {success}
           </div>
         )}
-      </form>
+      </form></>):(<div className="text-white text-center"><p>Review submitted successfully</p></div>)}
     </div>
   );
 }

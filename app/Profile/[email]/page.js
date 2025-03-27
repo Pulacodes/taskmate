@@ -12,6 +12,7 @@ export default function ProfilePage() {
   const params = useParams();
   const email = params?.email; // Extract `userid` safely
   const [userData, setUserData] = useState(null);
+  const [pHolder, setPlaceHolder] = useState(true)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null); // Added to handle errors
 
@@ -48,7 +49,7 @@ export default function ProfilePage() {
   const { bannerUrl, avatarUrl, username, aboutMe, tasks, assignedTasks, completedTasks, portfolioImages } = userData;
 
   return (
-    <div className="mx-auto min-h-screen ">
+    <div className="mx-auto min-h-screen bg-gray-900 text-white">
 
       {/* Profile Banner */}
       <div className="relative z-20 h-35 md:h-65">
@@ -74,13 +75,9 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <h3 className="text-center mb-1.5 text-2xl font-semibold text-black dark:text-white">
-        {username}
-      </h3>
-      <h3 className="text-center mb-1.5 text-2xl font-semibold text-black dark:text-white">
-        {userData.profession}
-        
-      </h3>
+      <h3 className="mb-2 text-center text-2xl font-bold">{username}</h3>
+        <h3 className="mb-4 text-center text-xl text-gray-400">{userData.profession}</h3>
+
       <div className="flex items-center justify-center">
         <h3 className="text-center mx-auto mb-5 mt-4.5 text-2xl font-semibold text-black dark:text-white">
           <Review userId={email} />
@@ -88,76 +85,84 @@ export default function ProfilePage() {
       </div>
 
       {/* User Stats */}
-      <div className="mx-auto mb-5.5 mt-4.5 grid max-w-94 grid-cols-3 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
-        <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
-          <span className="font-semibold text-black dark:text-white">
-            {tasks || 0}
-          </span>
-          <span className="text-sm">Tasks</span>
+        <div className="mx-auto mb-8 grid max-w-3xl grid-cols-3 rounded-lg bg-gray-800 p-4 shadow-lg">
+          <div className="flex flex-col items-center justify-center border-r border-gray-700 p-4">
+            <span className="text-xl font-bold">{tasks || 0}</span>
+            <span className="text-sm text-gray-400">Tasks</span>
+          </div>
+          <div className="flex flex-col items-center justify-center border-r border-gray-700 p-4">
+            <span className="text-xl font-bold">{assignedTasks || 0}</span>
+            <span className="text-sm text-gray-400">Assigned</span>
+          </div>
+          <div className="flex flex-col items-center justify-center p-4">
+            <span className="text-xl font-bold">{completedTasks || 0}</span>
+            <span className="text-sm text-gray-400">Completed</span>
+          </div>
         </div>
-        <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
-          <span className="font-semibold text-black dark:text-white">
-            {assignedTasks || 0}
-          </span>
-          <span className="text-sm">Assigned</span>
-        </div>
-        <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row">
-          <span className="font-semibold text-black dark:text-white">
-            {completedTasks || 0}
-          </span>
-          <span className="text-sm">Completed</span>
-        </div>
-      </div>
 
       {/* About Me Section */}
-      <div className="mx-auto max-w-180">
-        <h4 className="font-semibold text-black dark:text-white">
-          About Me
-        </h4>
-        <p className="mt-4.5 mb-15">
-          {aboutMe || 'This user has not shared any information about themselves.'}
-        </p>
-      </div>
-      <div className="flex relative px-4 pb-6 mx-auto space-x-2">
-            <h4 className="font-semibold text-black dark:text-white">
-              
-                PORTFOLIO:
-              </h4><br/>
-        {portfolioImages?.length > 0 && portfolioImages.map((file, index) =>  {
-          const isImage = /\.(jpg|jpeg|png|gif|bmp|svg|webp)$/i.test(file); // Check if it's an image
-      
-          return isImage ? (
-            <Image
-              key={index}
-              src={file}
-              width={150}
-              height={150}
-              alt="Task image"
-              className="rounded-lg object-cover"
-            />
-          ) : (
-            <div
-              key={index}
-              className="flex items-center space-x-2 bg-gray-800 text-white p-2 rounded-lg"
-            >
-              <span className="truncate max-w-[100px]">{file.split('/').pop()}</span>
-              <a
-                href={file}
-                download
-                className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-              >
-                Download
-              </a>
-            </div>
-          );
-        })}
-      </div>
+      <div className="mx-auto max-w-3xl px-4">
+          <h4 className="mb-4 text-xl font-bold">About Me</h4>
+          <p className="mb-8 text-gray-300">
+            {aboutMe || 'This user has not shared any information about themselves.'}
+          </p>
+        </div>
 
-      {/* Reviews */}
-      <div className="mb-6 text-center">
-        <h2 className="text-xl text-center font-semibold">Reviews</h2>
-        <ReviewsCarousel userId={email} />
-      </div>
+
+      {/* Portfolio Section */}
+              <div className="mx-auto max-w-3xl px-4">
+                <h4 className="mb-4 text-xl font-bold">Portfolio</h4>
+                {pHolder && (
+                  <div className="flex flex-wrap gap-4">
+                    <Image
+                          src={"/placeholder.jpg"}
+                          width={150}
+                          height={150}
+                          alt="Portfolio image"
+                          className="rounded-lg object-cover"
+                        />
+                  </div>
+                )
+
+                }
+                <div className="flex flex-wrap gap-4">
+                  {portfolioImages?.length > 0 &&
+                    portfolioImages.map((file, index) => {
+                      const isImage = /\.(jpg|jpeg|png|gif|bmp|svg|webp)$/i.test(file);
+                      setPlaceHolder(false);
+                      return isImage ? (
+                        <Image
+                          key={index}
+                          src={file}
+                          width={150}
+                          height={150}
+                          alt="Portfolio image"
+                          className="rounded-lg object-cover"
+                        />
+                      ) : (
+                        <div
+                          key={index}
+                          className="flex items-center space-x-2 rounded-lg bg-gray-800 p-2"
+                        >
+                          <span className="max-w-[100px] truncate text-gray-300">{file.split('/').pop()}</span>
+                          <a
+                            href={file}
+                            download
+                            className="rounded bg-blue-600 px-3 py-1 text-white transition hover:bg-blue-700"
+                          >
+                            Download
+                          </a>
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+
+      {/* Reviews Section */}
+              <div className="mx-auto max-w-auto px-4 py-8">
+                <h2 className="mb-4 text-center text-gray-200 text-2xl font-bold">Reviews</h2>
+                <ReviewsCarousel userId={email} />
+              </div>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Features from "@/components/Features";
 import Companies from "../../components/Companies"
 import React from "react";
+import FounderProfile from "@/components/team";
 import { useEffect } from "react";
 import Hero from "@/components/Hero";
 export default function Home() {
@@ -32,15 +33,14 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="overflow-hidden min-h-screen bg-gradient-to-r from-neutral-600 via-gray-950 to-blue-950">
+    <div className="overflow-hidden min-h-screen bg-gray-900">
       {/* Hero Section */}
       <br/>
       <Hero/>
       {/* Featured Available Tasks */}
       
-      <Companies/>
-      
       <Features/>
+      <FounderProfile/>
 
       {/* Popular Task Categories */}
       <section className="py-16">

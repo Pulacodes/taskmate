@@ -1,13 +1,26 @@
 import { NextResponse } from "next/server";
 import clientPromise from "../../../../lib/mongodb";
 import { ObjectId } from "mongodb";
+import fs from "fs";
+import path from "path";
 
 export async function POST(req) {
   try {
-    const { taskId, assignedUser, email, paymentMethod, address, requirements, taskType, location } = await req.json();
+    // Parse form data
+    const formData = await req.formData();
+
+    // Extract fields from form data
+    const taskId = formData.get("taskId");
+    const amount = formData.get("amount");
+    const assignedUser = formData.get("assignedUser");
+    const taskType = formData.get("taskType");
+    const personalInfo = JSON.parse(formData.get("personalInfo"));
+    const address = JSON.parse(formData.get("address"));
+    const requirements = JSON.parse(formData.get("requirements"));
+    const files = formData.getAll("files");
 
     // Validate required fields
-    if (!taskId || !assignedUser || !email || !paymentMethod || !requirements || !taskType) {
+    if (!taskId || !taskType || !personalInfo || !requirements) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
@@ -21,25 +34,40 @@ export async function POST(req) {
     const db = client.db("taskme");
     const tasksCollection = db.collection("tasks");
 
+    // Handle file uploads (store files locally for demonstration purposes)
+    const fileReferences = [];
+    for (const file of files) {
+      const fileBuffer = await file.arrayBuffer();
+      const fileName = `${Date.now()}_${file.name}`;
+      const filePath = path.join(process.cwd(), "public/uploads", fileName);
+
+      // Save file to the "public/uploads" directory
+      fs.writeFileSync(filePath, Buffer.from(fileBuffer));
+
+      // Store file reference
+      fileReferences.push({
+        name: file.name,
+        path: `/uploads/${fileName}`,
+      });
+    }
+
     // Prepare update data
     const updateData = {
-      AssignedTo: email,
-      paymentMethod,
-      requirements,
       taskType,
+      AssignedTo: assignedUser,
+      personalInfo,
+      requirements,
+      amount,
       status: "assigned",
+      files: fileReferences, // Store file references
     };
 
-    // Add conditional fields
-    if (paymentMethod === "cash") {
+    // Add address if task type is physical
+    if (taskType === "physical") {
       updateData.address = address;
     }
 
-    if (taskType === "physical") {
-      updateData.location = location;
-    }
-
-    // Update the task
+    // Update the task in MongoDB
     const result = await tasksCollection.updateOne(
       { _id: new ObjectId(taskId) },
       { $set: updateData }

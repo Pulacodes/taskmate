@@ -43,44 +43,47 @@ export async function POST(request, { params }) {
     const db = client.db("taskme");
     const formData = await request.formData();
 
-    // Process text fields
-    const username = formData.get('username');
-    const aboutMe = formData.get('aboutMe');
-    const profession = formData.get('profession');
-    const cvUrl = formData.get('cvUrl');
+    // Group all form data entries by field name
+    const fields = {};
+    for (const [fieldName, fieldValue] of formData.entries()) {
+      if (!fields[fieldName]) {
+        fields[fieldName] = [];
+      }
+      fields[fieldName].push(fieldValue);
+    }
 
-    // Process files
-    const avatarFile = formData.get('avatar');
-    const portfolioFiles = formData.getAll('portfolioImages');
-
-    const updateDocument = {};
     const setFields = {};
+    const pushOperations = {};
 
-    // Handle avatar upload
-    if (avatarFile && avatarFile.size > 0) {
-      const avatarUrl = await handleFileUpload(avatarFile);
-      setFields.avatarUrl = avatarUrl;
+    // Process each field
+    for (const [fieldName, values] of Object.entries(fields)) {
+      const isFileField = values.some(value => value instanceof File);
+
+      if (isFileField) {
+        // Process file uploads
+        const files = values.filter(value => value instanceof File);
+        const urls = await Promise.all(files.map(file => handleFileUpload(file)));
+
+        if (fieldName === 'avatarUrl') {
+          // Single file - set the field value
+          setFields[fieldName] = urls[0];
+        } else if (fieldName === 'portfolioImages') {
+          // Multiple files - push to array
+          pushOperations[fieldName] = { $each: urls };
+        }
+      } else {
+        // Handle text fields - use first value
+        setFields[fieldName] = values[0];
+      }
     }
 
-    // Handle portfolio images
-    if (portfolioFiles.length > 0) {
-      const portfolioUrls = await Promise.all(
-        portfolioFiles.map(file => handleFileUpload(file))
-      );
-      updateDocument.$push = { 
-        portfolioImages: { $each: portfolioUrls } 
-      };
-    }
-
-    // Add text fields to setFields
-    if (username) setFields.username = username;
-    if (aboutMe) setFields.aboutMe = aboutMe;
-    if (profession) setFields.profession = profession;
-    if (cvUrl) setFields.cvUrl = cvUrl;
-
-    // Add setFields to update document if any
+    // Build update document
+    const updateDocument = {};
     if (Object.keys(setFields).length > 0) {
       updateDocument.$set = setFields;
+    }
+    if (Object.keys(pushOperations).length > 0) {
+      updateDocument.$push = pushOperations;
     }
 
     if (Object.keys(updateDocument).length === 0) {

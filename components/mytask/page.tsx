@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { FiSearch, FiX, FiFilter, FiMapPin, FiClock, FiTag } from "react-icons/fi";
 import { useUser } from '@clerk/nextjs';
 
 interface Task {
@@ -9,6 +10,7 @@ interface Task {
   title: string;
   category: string;
   price: string;
+  taskType: string;
   status: string;
   createdAt: string;
   AssignedTo?: string;
@@ -122,41 +124,46 @@ const TaskList: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {filteredTasks.map((task) => (
             <div
-              key={task._id}
-              onClick={() => handleCardClick(task._id)}
-              className="relative bg-black bg-opacity-80 shadow-md rounded-md cursor-pointer hover:bg-gray-700 transition-colors"
-            >
-              {/* User Info */}
-              {task.user && (
-                <div className="flex items-center p-4 border-b border-transparent">
-                  <Image
-                    src={task.user.avatar}
-                    width={50}
-                    height={50}
-                    alt={`${task.user.username}'s avatar`}
-                    className="w-10 h-10 rounded-full mr-3"
-                  />
-                  <span className="text-sm text-gray-200 font-semibold">
-                    {task.user.username}
-                  </span>
-                </div>
-              )}
-
-              {/* Task Content */}
-              <div className="p-4">
-                <h3 className="text-lg text-indigo-700 font-bold mb-2">{task.title}</h3>
-                <p className="text-gray-400 mb-4">{task.category}</p>
-                <p className="text-lg font-bold text-white mb-2">TL {task.price}</p>
-                <p className="text-sm text-gray-400">
-                  Created At: {new Date(task.createdAt).toLocaleString()}
-                </p>
-              </div>
-
-              {/* Status Dot */}
-              <div className="absolute text-gray-400 bottom-4 right-4">
-                {task.status}<Image src={getStatusDot(task.status)} width={30} height={30} alt={task.status} className="w-4 h-4" />
-              </div>
-            </div>
+                          key={task._id}
+                          
+                          className="relative bg-gray-800/60 backdrop-blur-lg rounded-xl p-4 cursor-pointer
+                            hover:bg-gray-700/50 transition-all duration-200 shadow-xl"
+                        >
+                          {task.user && (
+                            <div className="flex items-center mb-4 pb-2 border-b border-gray-700">
+                              <img
+                                src={task.user.avatar}
+                                className="w-8 h-8 rounded-full mr-3"
+                                alt={`${task.user.username}'s avatar`}
+                              />
+                              <span className="text-gray-200 font-medium text-sm">
+                                {task.user.username}
+                              </span>
+                            </div>
+                          )}
+            
+            <h3 className="text-lg font-bold text-gray-200 mb-2">{task.title}</h3>
+                  <div className="flex items-center gap-2 mb-2">
+                    <FiTag className="text-primary" />
+                    <span className="text-sm text-gray-400">{task.category}</span>
+                  </div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <FiMapPin className="text-primary" />
+                    <span className="text-sm text-gray-400">{task.taskType}</span>
+                  </div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <FiClock className="text-primary" />
+                    <span className="text-sm text-gray-400">{task.createdAt}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-primary font-bold">${task.price}</span>
+                    <button className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:opacity-90 transition-opacity"
+                    onClick={() => handleCardClick(task._id)}
+                    >
+                      View Details
+                    </button>
+                  </div>
+                        </div>
           ))}
         </div>
       )}

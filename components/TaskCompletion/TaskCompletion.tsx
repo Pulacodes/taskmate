@@ -115,7 +115,7 @@ const TaskCompletion: React.FC<TaskCompletionProps> = ({ taskId, initialRequirem
       )}
 
       <button
-        className={`w-full p-3 rounded font-bold ${isComplete ? "bg-green-500 hover:bg-green-600" : "bg-gray-700 cursor-not-allowed"}`}
+        className={`w-full p-3 rounded font-bold ${isComplete ? "bg-green hover:bg-green-600" : "bg-gray-700 cursor-not-allowed"}`}
         onClick={markTaskAsComplete}
         disabled={!isComplete}
       >

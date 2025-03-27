@@ -35,9 +35,16 @@ const config: Config = {
     },
     extend: {
       colors: {
+        background: "#FAFAFB",
+            foreground: "#020817",
+            card: {
+                DEFAULT: "#FFFFFF",
+                foreground: "#020817"
+            },
         current: "currentColor",
         transparent: "transparent",
         white: "#FFFFFF",
+        green: "#00ab66",
         black: {
           // ...colors.black,
           DEFAULT: "#2B2727",
@@ -83,7 +90,41 @@ const config: Config = {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
-  			},
+  			}, dark: {
+          primary: {
+              DEFAULT: "#0D6EFD",
+              foreground: "#FFFFFF"
+          },
+          secondary: {
+              DEFAULT: "#1E1E2C",
+              foreground: "#FAFAFB"
+          },
+          accent: {
+              DEFAULT: "#6D7074",
+              foreground: "#FAFAFB"
+          },
+          background: "#020817",
+          foreground: "#FAFAFB",
+          card: {
+              DEFAULT: "#121212",
+              foreground: "#FAFAFB"
+          },
+          popover: {
+              DEFAULT: "#121212",
+              foreground: "#FAFAFB"
+          },
+          muted: {
+              DEFAULT: "#1E1E2C",
+              foreground: "#6D7074"
+          },
+          destructive: {
+              DEFAULT: "#FF4C4C",
+              foreground: "#FFFFFF"
+          },
+          border: "#3C3C3C",
+          input: "#3C3C3C",
+          ring: "#0D6EFD"
+      },
         graydark: "#333A48",
         whiten: "#F1F5F9",
         whiter: "#F5F7FD",

@@ -1,7 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { FiSearch, FiX, FiFilter, FiMapPin, FiClock, FiTag } from "react-icons/fi";
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -22,13 +23,12 @@ interface Task {
 
 const TaskList: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const router = useRouter();
 
-  // Fetch tasks and handle user data directly from API
   const fetchTasks = async () => {
     try {
       const response = await fetch('/api/tasks/viewtask', {
@@ -36,144 +36,146 @@ const TaskList: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch tasks.');
-      }
-
+      if (!response.ok) throw new Error('Failed to fetch tasks.');
       const data: Task[] = await response.json();
 
-      // Filter available tasks
-      const availableTasks = data.filter((task) => task.status === 'available' || 'Available');
-      setTasks(availableTasks);
-
-      // Extract unique categories
-      const uniqueCategories = Array.from(
-        new Set(availableTasks.map((task) => task.category))
+      const availableTasks = data.filter(task =>
+        task.status.toLowerCase() === 'available'
       );
-      setCategories(uniqueCategories);
-
-      // Set filtered tasks initially to all available tasks
-      setFilteredTasks(availableTasks);
+      setTasks(availableTasks);
+      setCategories([...new Set(availableTasks.map(task => task.category))]);
     } catch (error) {
       console.error('Error fetching tasks:', error);
     }
   };
 
-  // Handle filtering tasks by category
-  useEffect(() => {
-    
-    if (selectedCategory === 'all') {
-      const filtered = tasks.filter((task) => task.status === 'available');
-      setFilteredTasks(filtered);
-    } else {
-      const filtered = tasks.filter((task) => task.category === selectedCategory && task.status === 'available');
-      setFilteredTasks(filtered);
+  const filteredTasks = useMemo(() => {
+    let result = tasks.filter(task =>
+      task.status.toLowerCase() === 'available'
+    );
+
+    if (selectedCategory !== 'all') {
+      result = result.filter(task => task.category === selectedCategory);
     }
-  }, [selectedCategory, tasks]);
 
-  // Initial fetch
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+      result = result.filter(task =>
+        task.title.toLowerCase().includes(query) ||
+        task.content.toLowerCase().includes(query) ||
+        task.taskType.toLowerCase().includes(query) ||
+        task.category.toLowerCase().includes(query)
 
-  // Handle task card click
+      );
+    }
+
+    return result;
+  }, [tasks, selectedCategory, searchQuery]);
+
+  useEffect(() => { fetchTasks(); }, []);
+
   const handleCardClick = (taskId: string) => {
     router.push(`/viewtask/${taskId}`);
   };
 
-  // Map status to color dots
-  const getStatusDot = (status: string) => {
-    switch (status) {
-      case 'available':
-        return '/green-dot.png';
-      case 'assigned':
-        return '/yellow-dot.png';
-      case 'complete':
-        return '/blue-dot.png';
-      default:
-        return '';
-    }
-  };
+
 
   return (
     <div className="container mx-auto p-6">
-      <h2 className="text-2xl text-center text-white font-bold mb-4">Task List</h2>
+      <h2 className="text-2xl text-center text-white font-bold mb-6">Task Marketplace</h2>
 
-      {/* Category Filter Dropdown */}
-      <div className="mb-6">
-        <label
-          className="block text-white text-sm font-medium mb-2"
-          htmlFor="category"
-        >
-          Filter by Category:
-        </label>
-        <select
-          id="category"
-          className="bg-black text-white border border-gray-600 rounded-md p-2 "
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-        >
-          <option value="all">All Categories</option>
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
+      {/* Search Palette */}
+      <div className="relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)} 
+              placeholder="Search for freelance tasks..."
+              className="w-full mb-4 bg-gray-800 text-white border border-dark-border rounded-lg py-3 px-12 focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-dark-accent hover:text-dark-foreground"
+              >
+                <FiX />
+              </button>
+            )}
+          </div>
+
+      {/* Filters Section */}
+      <div className="mb-8 flex flex-col sm:flex-row gap-4 sm:items-center">
+        <div className="flex-1">
+          <select
+            className="w-mid bg-gray-800 text-white border border-gray-700 rounded-lg p-2
+              focus:ring-2 focus:ring-blue-500"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            <option value="all">All Categories</option>
+            {categories.map(category => (
+              <option key={category} value={category}>{category}</option>
+            ))}
+          </select>
+        </div>
         <Link
-      href="/tasks"
-      className="flex items-end mb-5 gap-2 rounded-sm bg-primary px-6 py-3 text-base w-40 font-semibold text-white duration-300 ease-in-out hover:bg-blue-600/80"
-    >
-      Add Task
-      <Image src="/plus.svg" width={20} height={20} alt="add" />
-    </Link>
+          href="/tasks"
+          className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-3
+            hover:bg-blue-700 transition-colors duration-200 font-semibold"
+        >
+          Add Task
+          <Image src="/plus.svg" width={20} height={20} alt="add" />
+        </Link>
       </div>
-      
 
-      {/* Task Cards */}
+      {/* Task Grid */}
       {filteredTasks.length === 0 ? (
-        <p className="text-gray-600">No tasks available for the selected category.</p>
+        <p className="text-gray-400 text-center py-12">No tasks found matching your search criteria.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {filteredTasks.map((task) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredTasks.map(task => (
             <div
               key={task._id}
-              onClick={() => handleCardClick(task._id)}
-              className="relative bg-gray-500 bg-clip-padding backdrop-filter  backdrop-blur bg-opacity-10 backdrop-saturate-100 backdrop-contrast-100 shadow-md rounded-md cursor-pointer hover:bg-gray-700 transition-colors"
+              
+              className="relative bg-gray-800/60 backdrop-blur-lg rounded-xl p-4 cursor-pointer
+                hover:bg-gray-700/50 transition-all duration-200 shadow-xl"
             >
-              {/* User Info */}
               {task.user && (
-                <div className="flex items-center p-4 border-b border-transparent">
+                <div className="flex items-center mb-4 pb-2 border-b border-gray-700">
                   <img
                     src={task.user.avatar}
-                    width={50}
-                    height={50}
+                    className="w-8 h-8 rounded-full mr-3"
                     alt={`${task.user.username}'s avatar`}
-                    className="w-10 h-10 rounded-full mr-3"
                   />
-                  <span className="text-sm text-gray-200 font-semibold">
+                  <span className="text-gray-200 font-medium text-sm">
                     {task.user.username}
                   </span>
                 </div>
               )}
 
-              {/* Task Content */}
-              <div className="p-4">
-                <h3 className="text-lg text-blue-600 font-bold mb-2">{task.title}</h3>
-                <p className="text-gray-400 mb-4">{task.category}</p>
-                <div className="flex p-2 items-center border-b border-transparent">
-                <Image src={"/location.svg"} className="w-4 h-4 mr-3" width={15} height={15} alt='location' />
-                <span className='text-gray-400 mb-2'>{task.taskType}</span></div>
-                <p className="text-lg font-bold text-white mb-2">TL {task.price}</p>
-                <p className="text-sm text-gray-400">
-                  Created At: {new Date(task.createdAt).toLocaleString()}
-                </p>
-              </div>
-
-              {/* Status Dot */}
-              <div className="absolute bottom-4 right-4">
-                <Image src={getStatusDot(task.status)} width={10} height={10} alt={task.status} className="w-4 h-4" />
-              </div>
+<h3 className="text-lg font-bold text-gray-200 mb-2">{task.title}</h3>
+      <p className="text-gray-400 text-sm mb-3">{task.content}</p>
+      <div className="flex items-center gap-2 mb-2">
+        <FiTag className="text-primary" />
+        <span className="text-sm text-gray-400">{task.category}</span>
+      </div>
+      <div className="flex items-center gap-2 mb-2">
+        <FiMapPin className="text-primary" />
+        <span className="text-sm text-gray-400">{task.taskType}</span>
+      </div>
+      <div className="flex items-center gap-2 mb-4">
+        <FiClock className="text-primary" />
+        <span className="text-sm text-gray-400">{task.createdAt}</span>
+      </div>
+      <div className="flex justify-between items-center">
+        <span className="text-primary font-bold">${task.price}</span>
+        <button className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:opacity-90 transition-opacity"
+        onClick={() => handleCardClick(task._id)}
+        >
+          View Details
+        </button>
+      </div>
             </div>
           ))}
         </div>

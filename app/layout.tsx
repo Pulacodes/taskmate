@@ -1,6 +1,6 @@
 // app/layout.tsx or app/layout.js
 'use client';  // Ensure this is a client component
-
+import { Analytics } from "@vercel/analytics/react"
 import './globals.css';
 import { ClerkProvider } from '@clerk/nextjs'
 import Footer from '@/components/ui/footer';
@@ -21,6 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         {/* Only the client-side part needs SessionProvider */}
+     
         <ClerkProvider>
           <div>
             {/* Navbar Component */}
@@ -37,6 +38,7 @@ export default function RootLayout({
             <Footer/>
           </div>
         </ClerkProvider>
+
       </body>
       
     </html>

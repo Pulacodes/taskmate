@@ -1,3 +1,4 @@
+//components/editprofile/page.js
 'use client';
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
@@ -166,7 +167,7 @@ export default function EditProfile() {
     <section>
       <div className="max-w-lg mx-auto p-4">
         <div className="mb-4">
-          <label className="block mb-2">Avatar:</label>
+          <label className="block mb-2 text-gray-200">Avatar:</label>
           {formData.avatarUrl && (
             <Image 
               src={formData.avatarUrl} 
@@ -180,44 +181,46 @@ export default function EditProfile() {
             type="file" 
             accept="image/*"
             onChange={handleAvatarUpload}
-            className="w-full"
+            className="w-full\
+            "
           />
         </div>
 
         <div className="mb-4">
-          <label className="block mb-2">Username:</label>
+          <label className="block mb-2 text-gray-200">Username:</label>
           <input
             type="text"
             name="username"
             value={formData.username}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            placeholder="username"
+            className="w-full border text-gray-200 p-2 bg-black rounded"
           />
         </div>
 
         <div className="mb-4">
-          <label className="block mb-2">About Me:</label>
+          <label className="block mb-2 text-gray-200">About Me:</label>
           <textarea
             name="aboutMe"
             value={formData.aboutMe}
             onChange={handleChange}
-            className="w-full border p-2 rounded h-32"
+            className="w-full border bg-black p-2  text-gray-200 rounded h-32"
           />
         </div>
 
         <div className="mb-4">
-          <label className="block mb-2">Profession:</label>
+          <label className="block mb-2 text-gray-200">Profession:</label>
           <input
             type="text"
             name="profession"
             value={formData.profession}
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            className="w-full border bg-black text-gray-200 p-2 rounded"
           />
         </div>
 
         <div className="mb-4">
-          <label className="block mb-2">Portfolio Images:</label>
+          <label className="block text-gray-200 mb-2">Portfolio Images:</label>
           <input
             type="file"
             multiple
@@ -253,8 +256,9 @@ export default function EditProfile() {
             type="text"
             name="cvUrl"
             value={formData.cvUrl}
+            placeholder="www.linkedin.com"
             onChange={handleChange}
-            className="w-full border p-2 rounded"
+            className="w-full border bg-black p-2 rounded"
           />
         </div>
 

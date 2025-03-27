@@ -50,7 +50,7 @@ let averageRating;
   return (
       <div className="mb-4">
         <div className="flex text-center px-auto items-center gap-2">
-          Rating: <StarRating rating={Math.round(averageRating)} />
+          <StarRating rating={Math.round(averageRating)} />
           <span className="text-center text-gray-600">
             {averageRating.toFixed(1)}/5
           </span>

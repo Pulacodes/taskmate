@@ -47,7 +47,7 @@ export default function ReviewsCarousel({ userId }) {
   }
 
   return (
-    <div className="w-full p-4 bg-white rounded-lg shadow-md">
+    <div className="w-full p-4 bg-gray-900 rounded-lg shadow-md">
       <Swiper
         modules={[Pagination]}
         pagination={{ clickable: true }}
@@ -63,7 +63,7 @@ export default function ReviewsCarousel({ userId }) {
         {reviews.map((review, index) => (
           <SwiperSlide key={index}>
             <div className="p-4 bg-gray-100 rounded-lg shadow hover:shadow-lg transition">
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center text-gray-800 justify-between mb-2">
                 <StarRating rating={review.rating} /><p>{review.reviewerId}</p>
                 <span className="text-sm font-semibold text-gray-500">{review.rating}/5</span>
               </div>
