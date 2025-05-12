@@ -1,12 +1,12 @@
 'use client';
 import { useSearchParams, useRouters } from "next/navigation";
-import { useState, useEffect } from "react";
-import { HiLocationMarker, HiClock, HiCurrencyDollar, HiCheck, HiX } from "react-icons/hi";
+import { useState } from "react";
+import { HiX, HiLocationMarker, HiDocumentAdd } from "react-icons/hi";
 import { debounce } from "lodash";
+
 
 const TaskMarketplaceCheckout = () => {
   const searchParams = useSearchParams();
-  const router = useRouters();
   const amount = parseFloat(searchParams.get("price") || "0");
   const assignedUser = searchParams.get("user") || "Someone";
   const email = searchParams.get("email");
@@ -21,11 +21,8 @@ const TaskMarketplaceCheckout = () => {
     assignedUser,
     taskType: "",
     address: {
-      street: "",
-      city: "",
-      state: "",
-      postalCode: "",
-      country: ""
+      Building: "",
+      Room: ""
     },
     email,
     requirements: [],
@@ -133,7 +130,7 @@ const TaskMarketplaceCheckout = () => {
       const result = await response.json();
 
       alert("Task assigned successfully!");
-      router.push("/my-tasks")
+    
     } catch (error) {
       console.error("API error:", error);
       alert("Error assigning task. Please try again.");
@@ -145,13 +142,14 @@ const TaskMarketplaceCheckout = () => {
   return (
     <div className="min-h-screen text-dark-foreground p-4 md:p-8">
       <div className="max-w-4xl mx-auto bg-gray-900 p-6 rounded-lg shadow-lg">
-        <h1 className="text-heading text-3xl text-bold font-heading mb-8">Task Checkout</h1>
+        <h1 className="text-center text-3xl text-bold font-heading mb-8">Task Checkout</h1>
 
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Task Type Selection */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Task Type</h2>
             <div className="flex space-x-4">
+            <HiLocationMarker className="w-5 h-5" />
               <label className="flex items-center space-x-2 cursor-pointer">
                 <input
                   type="radio"
@@ -182,19 +180,21 @@ const TaskMarketplaceCheckout = () => {
               <h2 className="text-xl font-semibold">Location Details</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block mb-2">Street Address</label>
+                  <label className="block mb-2">Building Name</label>
                   <input
                     type="text"
-                    onChange={(e) => handleInputChange("address", { ...formData.address, street: e.target.value })}
+                    placeholder="eg: Tekant 3"
+                    onChange={(e) => handleInputChange("address", { ...formData.address, Building: e.target.value })}
                     className="w-full bg-dark-secondary text-dark-foreground p-2 rounded"
                   />
                   {errors.street && <p className="text-destructive text-sm">{errors.street}</p>}
                 </div>
                 <div>
-                  <label className="block mb-2">City</label>
+                  <label className="block mb-2">Room number</label>
                   <input
                     type="text"
-                    onChange={(e) => handleInputChange("address", { ...formData.address, city: e.target.value })}
+                    onChange={(e) => handleInputChange("address", { ...formData.address, Room: e.target.value })}
+                    placeholder="3221"
                     className="w-full bg-dark-secondary text-dark-foreground p-2 rounded"
                   />
                   {errors.city && <p className="text-destructive text-sm">{errors.city}</p>}
@@ -292,6 +292,7 @@ const TaskMarketplaceCheckout = () => {
                   type="tel"
                   onChange={(e) => handleInputChange("personalInfo", { ...formData.personalInfo, phone: e.target.value })}
                   className="w-full bg-dark-secondary text-dark-foreground p-2 rounded"
+                  placeholder="+90 0000000000"
                 />
                 {errors.phone && <p className="text-destructive text-sm">{errors.phone}</p>}
               </div>
@@ -301,7 +302,7 @@ const TaskMarketplaceCheckout = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={isLoading}
+            
             className="w-full bg-primary text-primary-foreground py-3 rounded font-semibold hover:bg-opacity-90 transition-colors disabled:opacity-50"
           >
             {isLoading ? "Processing..." : "Proceed to Payment"}

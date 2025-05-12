@@ -1,18 +1,29 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { FaGraduationCap, FaLaptopCode, FaMoneyBillWave, FaTasks } from "react-icons/fa";
+import { SignedIn, SignedOut, useUser } from '@clerk/nextjs';
 import { IconType } from "react-icons";
+import { getTaskStats } from '../lib/Taskstats';
 
 const HeroSection = () => {
-  const [taskCount, setTaskCount] = useState(150);
+  const { user } = useUser();
+  const email = user?.emailAddresses[0]?.emailAddress;
   const [isVisible, setIsVisible] = useState(false);
+  const [stats, setStats] = useState({active: 0,});
 
   useEffect(() => {
+
     setIsVisible(true);
-    const interval = setInterval(() => {
-      setTaskCount((prev) => prev + Math.floor(Math.random() * 5));
-    }, 5000);
-    return () => clearInterval(interval);
+
+    const fetchStats = async () => {
+      if (email) {
+        const taskStats = await getTaskStats(email);
+        setStats(taskStats);
+      }
+    };
+    
+    fetchStats();
+
   }, []);
 
   interface FloatingIconProps {
@@ -56,7 +67,7 @@ const HeroSection = () => {
             <div className="flex items-center gap-4 text-white">
               <div className="flex items-center gap-2">
                 <FaTasks className="text-primary" />
-                <span>{taskCount}+ Active Tasks</span>
+                <span>{stats.active}+ Active Tasks</span>
               </div>
               <div className="h-4 w-px bg-dark-border" />
               <div className="flex items-center gap-2">

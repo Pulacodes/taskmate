@@ -21,6 +21,7 @@ export default function TaskDetailsPage() {
   const [task, setTask] = useState(null);
   const [error, setError] = useState(null);
   const [offers, setOffers] = useState([]);
+  const [pHolder, setPlaceHolder] = useState(true);
   const [showOfferBox, setShowOfferBox] = useState(false);
   const [offerText, setOfferText] = useState('');
   const [bidAmount, setbidAmount] = useState('');
@@ -47,6 +48,7 @@ export default function TaskDetailsPage() {
         setOffers(data.offers || []);
   
         // Check user only after data is set
+        
         if (user) {
           const userOffer = data.offers?.find((offer) => offer.userId === user?.emailAddresses[0]?.emailAddress);
           if (userOffer) setExistingOffer(userOffer);
@@ -60,6 +62,7 @@ export default function TaskDetailsPage() {
   
     fetchTask();
   }, [taskid, user]);
+  
   
   if (loading) return <div className="flex items-center justify-center text-white h-screen bg-gray-900">
     <p>Loading</p>
@@ -135,46 +138,57 @@ export default function TaskDetailsPage() {
   };
   
   const isTaskOwner = user?.emailAddresses[0]?.emailAddress === task?.user?.email;
+  if (task.files?.length > 0) {
+    setPlaceHolder(false);
+  }
 
 
   return (
     <section className="overflow-hidden py-16 md:py-20 lg:py-28 bg-gradient-to-br from-dark-primary/10 to-transparent bg-gray-900">
       
        <div className="max-w-7xl mx-auto">
+        <h1 className="text-bold text-4xl text-center font-bold  text-lg font-heading text-gray-200 mb-4">Task Details</h1>
+
           {/* Task Header */}
-        <div className="bg-gray-800/60 backdrop-blur-lg rounded-lg shadow-sm p-6 mb-6">
-          <h1 className="text-heading text-4xl text-center font-bold  text-lg font-heading text-gray-200 mb-4">{task.title}</h1>
+        <div className="bg-white rounded backdrop-blur-lg rounded-lg shadow-sm p-6 mb-6">
+          <h1 className="text-heading text-4xl text-center font-bold  text-lg font-heading text-gray-800 mb-4">{task.title}</h1>
           <div className="flex flex-wrap items-center text-center gap-4 mb-4">
-            <div className="flex items-center text-center text-gray-400">
-              <BsBriefcase className="mr-2 text-blue-400" />
+            <div className="flex items-center font-bold text-center text-gray-800">
+              <BsBriefcase className="mr-2 font-bold text-blue-400" />
               <span>{task.category}</span>
             </div>
-            <div className="flex items-center text-gray-400">
+            <div className="flex items-center font-bold text-gray-800">
               <FiDollarSign className="mr-2 text-green" />
               <span>{task.price}</span>
             </div>
-            <div className="flex items-center text-gray-400">
+            <div className="flex items-center text-gray-800">
               <FiClock className="mr-2" />
               <span>{task.createdAt}</span>
             </div>
           </div>
           <h2 className='text-white '>Description:</h2>
-          <p className="text-body text-gray-400 mb-4">{task.content}</p>
+          <p className="text-body text-gray-800 mb-4">{task.content}</p>
           
         </div>
 
         {/*Project Files*/}
-        <div className="flex bg-gray-800/60 backdrop-blur-lg relative px-4 pb-6 mx-auto space-x-2">
-  <h2 className="text-xl font-heading text-gray-200 mb-4">Project Files:</h2>
-  {task.files?.length > 0 &&
-    task.files.map((file, dox) => {
-      const isImage = /\.(jpg|jpeg|png|gif|bmp|svg|webp)$/i.test(file); // Check if it's an image
+        <div className="flex bg-white rounded backdrop-blur-lg relative px-4 pb-6 mx-auto space-x-2">
+        <h2 className="text-xl font-heading font-bold text-gray-800 mb-4">Project Files:</h2>
+        {pHolder && (
+            <div className="flex flex-wrap gap-4">
+              <Image
+                src={"/placeholder.jpg"}
+                width={150}
+                height={150}
+                alt="Portfolio image"
+                className="rounded-lg object-cover"
+              />
+            </div>
+          )}
+          {task.files?.length > 0 && task.files.map((file, dox) => {const isImage = /\.(jpg|jpeg|png|gif|bmp|svg|webp)$/i.test(file); // Check if it's an image
+          return isImage ? (
 
-      return isImage ? (
-        <div
-          key={dox} // Moved the key here
-          className="rounded-lg shadow-sm p-6 mb-6"
-        >
+        <div key={dox}  className="rounded-lg shadow-sm p-6 mb-6">
           <div className="flex overflow-x-auto gap-4 pb-4">
             <Image
               src={file}
@@ -204,8 +218,8 @@ export default function TaskDetailsPage() {
 </div>
 
     <br/>
-          
-        <div className="bg-gray-800/60 backdrop-blur-lg rounded-lg shadow-sm p-6 mb-6">
+          {/*User*/}
+        <div className="bg-white rounded backdrop-blur-lg rounded-lg shadow-sm p-6 mb-6">
           <div className="flex items-center gap-4">
             <img
               src={task.user.avatar}
@@ -214,9 +228,9 @@ export default function TaskDetailsPage() {
             />
             <div>
             <Link href={`/Profile/${task.user.email}`} >
-              <h3 className="font-heading text-gray-200">{task.user.username}</h3>
+              <h3 className="font-heading font-bold text-gray-800">{task.user.username}</h3>
               </Link>
-              <div className="flex items-center gap-4 text-gray-400">
+              <div className="flex items-center gap-4 text-gray-600">
                 <span><Review userId={task.user.email}/></span>
               </div>
             </div>
@@ -305,10 +319,10 @@ export default function TaskDetailsPage() {
             {offers.map((offer, index) => (
               <li key={index} className="bg-gray-800 bg-blur/80 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div className="flex items-center space-x-4">
-                  <Image src={offer.avatar} width={50} height={50} alt={`${offer.userId}'s profile avatar`} className="rounded-full" />
+                  <Image src={"/avatar.svg"} width={50} height={50} alt={`${offer.userId}'s profile avatar`} className="rounded-full" />
                   <div>
-                    <p className="text-lg font-semibold text-gray-200">{offer.name}</p>
-                    <p className="text-sm text-gray-400"><Review userId={offer.userId} /></p>
+                    <span className="text-lg font-semibold text-gray-200">  {offer.name}  </span>
+                    <Review userId={offer.userId} />
                   </div>
                 </div>
                 

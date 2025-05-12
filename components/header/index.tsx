@@ -42,7 +42,7 @@ const Header = () => {
       <header
         className={`header left-0 top-0 z-40 flex w-full items-center ${
           sticky
-            ? 'fixed z-[9999] bg-gray-800 !bg-opacity-80 shadow-sticky backdrop-blur-sm transition'
+            ? 'fixed bg-gray-800 !bg-opacity-80 shadow-sticky backdrop-blur-sm transition'
             : 'absolute bg-transparent'
         }`}
       >
@@ -162,7 +162,7 @@ const Header = () => {
       </SignedIn>
       <SignedOut>
         {/* Signed out users get sign in button */}
-        <div className='flex items-end mb-5 gap-2 rounded-sm bg-gray-600 px-6 py-3 text-base font-semibold text-white duration-300 ease-in-out hover:bg-blue-600/80'><SignInButton /></div>
+        <div className='flex items-end mb-5 gap-2 rounded-sm bg-gray-600 bg-opacity-60 px-6 py-3 text-base font-semibold text-white duration-300 ease-in-out hover:bg-blue-600/80'><SignInButton /></div>
         
       </SignedOut>
         </div>

@@ -78,6 +78,7 @@ const AddTask: React.FC = () => {
       setPrice('');
       setDueDate('');
       setCategory('');
+      setLocation('');
       setFiles([]);
       setLoading(false);
       router.push('/viewtask');

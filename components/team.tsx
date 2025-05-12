@@ -9,7 +9,7 @@ const FounderProfile = () => {
     company: "Taskmate",
     tagline: "Making life easier for you",
     mission: "Dedicated to building sustainable technology solutions that empower businesses and communities to thrive in the digital age.",
-    image: "/pulaavatar.jpg",
+    image: "/Pula.jpeg",
     contacts: [
       { icon: FaLinkedin, link: "#", label: "LinkedIn" },
       { icon: FaEnvelope, link: "mailto: pulalepholisa@gmail.com", label: "Email" },

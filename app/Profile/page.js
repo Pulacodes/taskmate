@@ -1,10 +1,8 @@
 'use client';
 import { SignedIn, SignedOut, useUser } from '@clerk/nextjs';
 import Image from 'next/image';
-import EditProfile from '../../components/editprofile/page';
 import { useState, useEffect } from 'react';
 import { getTaskStats } from '../../lib/Taskstats';
-import Link from "next/link";
 import ReviewsCarousel from '@/components/Review/page';
 
 export default function ProfilePage() {
@@ -109,10 +107,10 @@ export default function ProfilePage() {
           </p>
         </div>
 
-        <Link href={"/Profile/Edit"} 
+        <button
         className="mx-auto mb-8 w-50 flex items-center justify-center rounded-lg bg-blue-600 px-6 py-2 text-white transition hover:bg-blue-700">
                       Edit Profile
-        </Link>
+        </button>
 
         <div className="mx-auto max-w-3xl px-4">
           <h4 className="mb-4 text-xl font-bold">Portfolio</h4>
